@@ -1,6 +1,5 @@
-// 'use strict';
-var Sequelize = require('sequelize')
-var Bcrypt = require('bcrypt')
+'use strict';
+let bCrypt = require('bcrypt')
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     userid: DataTypes.STRING,
@@ -8,26 +7,40 @@ module.exports = (sequelize, DataTypes) => {
     fullname: DataTypes.STRING,
     hp: DataTypes.STRING,
     chatId: DataTypes.STRING,
-    isActive: DataTypes.STRING
+    level: DataTypes.STRING,
+    isActive: DataTypes.ENUM('1','0')
   }, {
+    indexes:[
+      {unique: true,
+      fields: ['userid']}
+    ],
     hooks: {
-      beforeCreate: (user) => {
-        const salt = Bcrypt.genSaltSync()
-        user.password = Bcrypt.hashSync(user.password, salt)
-      }
-    },
-    instanceMethods: {
-      validPassword: function(password) {
-        return Bcrypt.compareSync(password, this.password)
+      beforeBulkCreate: (users, options) => {
+        users.forEach(user=>{
+          user.userid = (user.userid.length ==1 )? '00'+user.userid:(user.userid.length == 2)?'0'+user.userid:user.userid
+          user.password = bCrypt.hashSync(user.password, bCrypt.genSaltSync(8), null)
+        })
       }
     }
   });
-
-  sequelize.sync()
-      .then(() => console.log('Table user telah dibuat'))
-      .catch(err => console.log('Error terjadi: ', err))
   User.associate = function(models) {
     // associations can be defined here
+    User.hasOne(models.Rombel,{foreignKey:'userId', sourceKey: 'userid'})
+    User.hasMany(models.Jadwal,{foreignKey:'guruId', sourceKey: 'userid'})
   };
+
+  User.cek = (userId) => {
+    return new Promise((resolve, reject) => {
+
+
+      User.findOne({where:{userid:userId}}).then(data => {
+        if (data) {
+          return resolve(data)
+        } else {
+          return reject('No data')
+        }
+      })
+    })
+  }
   return User;
 };

@@ -2,8 +2,9 @@ extends layout/base
 block content 
 	section.content-header 
 		h1 
-			| Blank Page
-			small it all starts here
+			//- <i class="fa fa-#{p}"></i>
+			span(style="text-transform:capitalize") #{p}
+			small !{subtitle}
 		ol.breadcrumb 
 			li 
 				a(href='#') 
@@ -11,16 +12,28 @@ block content
 					| Level 
 			li.active Here 
 	section.content
-		.box
-			.box-header.with-border
-				h3.box-title
-					| #{title}
-				.box-tools.pull-right
-					button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
-						i.fa.fa-minus
-					button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
-						i.fa.fa-times
-			.box-body
-				| Start Creating your amazing application!
-			.box-footer
-				| Footer
+		unless p
+			.box
+				.box-header.with-border
+					h3.box-title
+						| Dashboard
+					.box-tools.pull-right
+						button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							i.fa.fa-minus
+						button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							i.fa.fa-times
+				.box-body.text-center
+					img(src="/img/logo-jas.png")
+					h1 Selamat Datang !{user.fullname}
+				.box-footer
+					| Footer
+		if (p == 'users')
+			include adminInc/user
+		if (p == 'siswas')
+			include adminInc/siswa
+		if (p == 'rombel')
+			include adminInc/rombel
+		if (p == 'mapel')
+			include adminInc/mapel
+		if (p == 'jadwal')
+			include adminInc/jadwal

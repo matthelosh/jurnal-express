@@ -1,17 +1,22 @@
-header.main-header
+header.main-header.fixed-top
 	a(href='/').logo
 		span.logo-mini
-			<b>A</b> LT
+			<b>J</b> AS
 		span.logo-lg
-			<b>Admin</b> LT
-	nav(role='navigation').navbar.navbar-static-top
+			<b>Jurnal</b> AS
+	nav(role='navigation' ).navbar.navbar-static-top
 		//- data-toggle="push-menu" role="button"
 		a(href='#', role='button', data-toggle='push-menu').sidebar-toggle
 			span.sr-only Toggle Navigation
 			span.icon-bar
 			span.icon-bar
 			span.icon-bar
-
+		//- div.navbar-left
+			ul.nav.navbar-nav
+				li
+					a(href="#")
+						img(src="/img/logo-jas.png" height="20px")
+						| &nbsp; Nama Sekolah
 		div.navbar-custom-menu
 			ul.nav.navbar-nav.navbar-left
 				//- p #{title}
@@ -86,15 +91,15 @@ header.main-header
 					a(href='#',data-toggle='dropdown').dropdown-toggle
 						img(src='/adminlte/dist/img/user2-160x160.jpg',alt='User Image').user-image
 						span.hidden-xs
-							| Alexander Pierce
+							| !{user.fullname}
 					ul.dropdown-menu
 						li.user-header
 							img(src='/adminlte/dist/img/user2-160x160.jpg',alt='User Image').img-circle
 							p
-								| Alexander Pierce - Web Developer
+								| !{user.fullname}
 								small
-									| Member since Nov. 2012
-						li.user-body
+									| Member since !{user.createdAt.toLocaleDateString()}
+						//- li.user-body
 							.row
 								.col-xs-4.text-center
 									a(href='#')
@@ -111,5 +116,5 @@ header.main-header
 								a(href='#').btn.btn-default.btn-flat
 									| Profile
 							.pull-right
-								a(href='#').btn.btn-default.btn-flat
+								a(href='/logout').btn.btn-default.btn-flat
 									| Sign out

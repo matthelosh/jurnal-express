@@ -1,0 +1,172 @@
+.box
+	.box-header
+		h3.box-title
+			i.fa.fa-university &nbsp;
+			span.hidden-xs Manajemen Rombel / Kelas
+		.box-tools.pull-right
+			button.btn.btn-box-tool#btnImportUser(data-toggle='modal' title='Impor Rombel dari Excel' data-target='#modalImport' )
+				i.fa.fa-file-excel-o.fa-2x
+			button.btn.btn-box-tool#btnAddRombel(type="button" title='Tambah Rombel')
+				i.fa.fa-university.fa-2x
+			button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+				i.fa.fa-minus
+			button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+				i.fa.fa-times
+	.box-body
+		//- #div !{data}
+		.table-responsive
+			table.table.table-bordered.table-condensed.dataTable#tableRombels(data-judul="Data Rombel")
+				caption Data Rombel
+				thead
+					tr
+						th No
+						th Kode Rombel
+						//- th Password
+						th Nama Rombel
+						th Wali Kelas
+						//- th Chat ID
+						//- th Level
+						th Opsi
+				tbody#tbodyRombels
+					each rombel, index in data
+						tr
+							td #{index+1}
+							td #{rombel.kodeRombel}
+							//- td #{user.password}
+							td #{rombel.namaRombel}
+							td 
+								if (rombel.User != null)
+									| #{rombel.User.fullname}
+								else
+									| Belum ada Wali
+							//- td #{user.chatId}
+							//- td #{user.level}
+							td 
+								button.btn.btn-sm.btn-warning.flat.btnEditRombel(data-id=rombel.id, data-nama=rombel.namaRombel)
+									i.fa.fa-pencil
+								button.btn.btn-sm.btn-danger.flat.btnDelRombel(data-id=rombel.id, data-nama=user.namaRombel)
+									i.fa.fa-trash
+								button.btn.btn-sm.btn-info.flat.btnMngRombel(data-id=rombel.id, data-nama=user.namaRombel)
+									i.fa.fa-table
+	.box-footer
+		| Footer
+
+.modal#modalFormRombel
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 
+					span#modForm Tambah 
+					| Rombel / Kelas
+			.modal-body
+					form.form#frmAddRombel(method="post" action="")
+						input#id(type="hidden" name="id" value="")
+						input#mod(type="hidden" name="mod" value="create")
+						input#content(type="hidden" name="content" value="rombels")
+						.form-group
+							label Kode Rombel
+							input.form-control#kodeRombel(name="kodeRombel" placeholder="Kode Rombel" required)
+						.form-group
+							label Nama Rombel
+							input.form-control#namaRombel(name="namaRombel" placeholder="Nama Rombel" required)
+						.form-group
+							label(style="width:100%") Wali Kelas
+								select#selectWali(name="wali" style="width:100%" placeholder="Wali Kelas")
+						.form-group
+							button.btn.flat.btn-primary.center-block#btnCreateSiswa
+								i.fa.fa-save
+								| &nbsp; Simpan
+
+.modal.fade#modalImport(role="dialog")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Impor Rombel
+			.modal-body
+					form.form#frmImportRombel(method="post" action="" enctype="multipart/form-data")
+						.form-group
+							label File Excel
+							input.form-control#file(name="file" type="file" placeholder="File" required)
+						.form-group
+							button.btn.flat.btn-success.center-block#btnImportNow(data-content="rombels")
+								i.fa.fa-save
+								| &nbsp; Import
+
+.modal.fade#modalMngRombel(role="dialog")
+	.modal-dialog.modal-lg.modal-dialog-centered(style="width:98%;height: 95vh;")
+		.modal-content
+			.modal-header.bg-green
+				button.close(type="button" data-dismiss="modal") &times;
+				h4.modal-title 
+					i.fa.fa-university &nbsp;
+					| Manajemen Rombel
+					span#mode
+			.modal-body
+				.container
+					.row
+						.hidden#idRombel
+						.col-sm-6#col-member
+							h4 Data Anggota Rombel: &nbsp;
+								span.namaRombel
+							p Siswa dipilih
+								span#memberDipilih 0 Org
+							.row
+								.form-group.col-sm-3
+									select.form-control.selRombel#selRombelSrc(style="width:100%" disabled)
+								.form-group.col-sm-3.flat
+									button.btn.btn-warning.flat#pindahkan 
+										i.fa.fa-exchange
+										| &nbsp; Pindah Rombel
+								.form-group.col-sm-3
+									select.form-control.selRombel#selRombelDest(style="width:100%")
+									//- button.btn.btn-danger.flat#removeFromRombel Hapus siswa dari Rombel
+								.form-group.col-sm-3
+									button.btn.btn-danger.flat#keluarkan 
+										i.fa.fa-trash
+										| &nbsp; Keluarkan
+							hr
+							.row
+								.table-responsive(style="max-height: 50vh; overflow-y: scroll;")
+									table.table.table-bordered#tblMembers(width="100%")
+										thead
+											th NIS
+											th Nama
+											th
+												label
+													input#selectAllMembers(type="checkbox")
+													| Pilih Semua
+										tbody#tbodyMembers
+									
+						.col-sm-6#non-member
+							.row
+								.col-sm-12
+									h4 Siswa belum dapat kelas
+							.row
+								.col-sm-4
+									p Siswa dipilih &nbsp;
+										span#nonMemberDipilih 0 Org
+							.row
+								.form-group.col-sm-12
+									button.btn.btn-success.flat#tempatkan 
+										i.fa.fa-save
+										| &nbsp; Masukkan ke Rombel 
+										span.namaRombel
+							hr
+							.row
+								.table-responsive(style="max-height: 50vh; overflow-y: scroll;")
+									table.table.table-bordered#tblNonMembers(width="100%")
+										thead
+											th NIS
+											th Nama
+											th
+												label
+													input#selectAllNonMembers(type="checkbox")
+													| Pilih Semua
+										tbody#tbodyNonMembers
+
+			//- .modal-footer
+				h5 Footer

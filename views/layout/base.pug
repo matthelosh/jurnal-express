@@ -1,12 +1,24 @@
 doctype html
 html
 	head
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		title !{title}
 		include header.pug
-	body.hold-transition.skin-blue.sidebar-mini
+
+
+	body.hold-transition.skin-green.sidebar-mini.fixed
+		.se-pre-con
 		.wrapper
 			include navigation.pug
 			include sidebar.pug
 			.content-wrapper
 				block content
 			include footer.pug
+			.modal#modalLoader
+				.modal-dialog
+					.modal-content
+						.loader(style="width: 100%; text-align:center")
+							img(src="/img/loader.gif" style="margin: auto; width: 200px")
+							//- .teks(style="padding-left: 50px; float:left")
+							//- 	h1 Loading
 			include js.pug

@@ -23,10 +23,23 @@ module.exports = {
 		}
 	},
 	sessionChecker : (req, res, next) => {
-	if (req.session.user && req.cookies.user_sid) {
-		res.redirect('/dashboard')
-	} else {
-		next()
+		if (req.session.user && req.cookies.user_sid) {
+			res.redirect('/dashboard')
+		} else {
+			next()
+		}
+
+	},
+	isLoggedIn : (req,res,next) => {
+		if (req.isAuthenticated()) {
+			return next()
+		}
+		res.redirect('/login')
+	},
+	isAdmin: (req, res, next) => {
+		if (req.isAuthenticated() && req.user.level == '1') {
+			return next()
+		}
+		res.redirect('/login')
 	}
-}
 }

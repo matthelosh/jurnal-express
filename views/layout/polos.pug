@@ -1,9 +1,10 @@
 doctype html
 html
 	head
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
 		include header.pug
 	body
-		.wrapper
+		.wrapper(style="background: url('/img/bg.png'); background-size:cover;background-position:fixed; min-height: 100vh!important; height: 100vh!important;")
 			block content
 				
 			include js.pug

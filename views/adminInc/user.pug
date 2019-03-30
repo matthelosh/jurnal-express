@@ -1,0 +1,102 @@
+.box
+	.box-header
+		h3.box-title
+			i.fa.fa-users &nbsp;
+			span.hidden-xs Manajemen Pengguna
+		.box-tools.pull-right
+			button.btn.btn-box-tool#btnImport(data-toggle='tooltip',title='Impor Pengguna dari Excel' )
+				i.fa.fa-upload.fa-2x
+			button.btn.btn-box-tool#btnAddUser(data-toggle='tooltip',title='Tambah Pengguna')
+				i.fa.fa-user-plus.fa-2x
+			button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+				i.fa.fa-minus
+			button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+				i.fa.fa-times
+	.box-body
+		.table-responsive
+			table.table.table-bordered.table-condensed.dataTable#tableUsers(data-judul="Data Pengguna")
+				caption Data Pengguna
+				thead
+					tr
+						th No
+						th UserID
+						//- th Password
+						th Nama Lengkap
+						th No HP
+						th Chat ID
+						th Level
+						th Opsi
+				tbody#tbodyUsers
+					each user, index in data
+						tr
+							td #{index+1}
+							td #{user.userid}
+							//- td #{user.password}
+							td #{user.fullname}
+							td #{user.hp}
+							td #{user.chatId}
+							td #{user.level}
+							td 
+								button.btn.btn-sm.btn-warning.flat.btnEditUser(
+									data-id=user.id
+									data-nama=user.fullname)
+									i.fa.fa-pencil
+								button.btn.btn-sm.btn-danger.flat.btnDelUser(
+									data-id=user.id
+									data-nama=user.fullname)
+									i.fa.fa-trash
+	.box-footer
+		| Footer
+
+.modal#modalFormUser
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Tambah user
+			.modal-body
+					form.form#frmAdduser(method="post" action="")
+						input#id(type="hidden" name="id" value="")
+						input#mod(type="hidden" name="mod" value="create")
+						.form-group
+							label UserID/NIP
+							input.form-control#userid(name="userid" placeholder="User Name" required)
+						.form-group
+							label Password
+							input.form-control#password(name="password" placeholder="Password" required)
+						.form-group
+							label Nama Lengkap
+							input.form-control#fullname(name="fullname" placeholder="Nama Lengkap, Gelar diketik di belakang" required)
+						.form-group
+							label No. HP
+							input.form-control#hp(name="hp" placeholder="No. HP" required)
+						.form-group
+							label Chat ID
+							input.form-control#chatId(name="chatId" placeholder="Chat ID Telegram" required)
+						.form-group
+							label Level Pengguna
+							select.form-control#level(name="level")
+								option(value="2") Guru
+								option(value="3") Staf
+						.form-group
+							button.btn.flat.btn-primary.center-block#btnCreateuser
+								i.fa.fa-save
+								| &nbsp; Simpan
+
+.modal#modalImport
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Impor user
+			.modal-body
+					form.form#frmImportUser(method="post" action="" enctype="multipart/form-data")
+						.form-group
+							label File Excel
+							input.form-control#file(name="file" type="file" placeholder="File" required)
+						.form-group
+							button.btn.flat.btn-success.center-block#btnImportNow(data-content="users")
+								i.fa.fa-save
+								| &nbsp; Import
