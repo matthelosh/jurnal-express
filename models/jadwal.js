@@ -10,13 +10,22 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     hooks: {
       beforeBulkCreate: (jadwals, options) => {
-        jadwals.forEach(jadwal => {
-          var jamke = jadwal.jamke.split('-')
-          jadwal.kodeJadwal = jadwal.hari.substr(0,3)+jadwal.guruId+jadwal.mapelId+jadwal.rombelId+jamke[0]+jamke[1]
-          jadwal.guruId = (jadwal.guruId.length ==1 )? '00'+jadwal.guruId:(jadwal.guruId.length == 2)?'0'+jadwal.guruId:jadwal.guruId
-          jadwal.jamke = jamke[0]+'-'+jamke[1]
+        
+        async function eachJadwal(){
+          var kode = []
+          await jadwals.forEach(jadwal => {
+            var jamke = jadwal.jamke.split('-')
+            var Jamke = (jamke.length >1)?jamke[0]+jamke[1]:jamke[0]
+            jadwal.kodeJadwal = jadwal.hari.substr(0,3)+jadwal.guruId+jadwal.mapelId+jadwal.rombelId+Jamke
+            jadwal.guruId = (jadwal.guruId.length ==1 )? '00'+jadwal.guruId:(jadwal.guruId.length == 2)?'0'+jadwal.guruId:jadwal.guruId
+            jadwal.jamke = (jamke.length > 1) ? jamke[0]+'-'+jamke[1]:jamke[0]
+            kode.push(jadwal.jamke)
+            })
+          console.log(kode)
 
-        })
+        }
+
+        eachJadwal()
       }
     }
   });

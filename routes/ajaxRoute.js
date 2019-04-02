@@ -10,6 +10,7 @@ let RombelController = require('./../controllers/RombelController')
 let SiswaController = require('./../controllers/SiswaController')
 let MapelController = require('./../controllers/MapelController')
 let JadwalController = require('./../controllers/JadwalController')
+let LogAbsenController = require('./../controllers/LogAbsenController')
 
 // Users ROute
 router.get('/getSelectUsers', Auth.isLoggedIn, UserController.getAll4Select)
@@ -51,4 +52,13 @@ router.get('/get-select-mapels', Auth.isLoggedIn, MapelController.getAll4Select)
 // Jadwal Routes
 router.post('/create-jadwal', Auth.isLoggedIn, JadwalController.createOne)
 router.post('/import-jadwals', Auth.isLoggedIn, JadwalController.importMany)
+router.delete('/delete-jadwal', Auth.isLoggedIn, JadwalController.deleteOne)
+router.get('/data-jadwal/:id', Auth.isLoggedIn, JadwalController.getOne)
+router.put('/update-jadwal', Auth.isLoggedIn, JadwalController.updateOne)
+
+// Monitor Jadwal
+router.post('/activate-jadwal', Auth.isLoggedIn, LogAbsenController.activate)
+router.put('/ijinkan-guru', Auth.isLoggedIn, LogAbsenController.ijinkanGuru)
+router.put('/tutup-jadwal', Auth.isLoggedIn, LogAbsenController.tutupJadwal)
+
 module.exports = router

@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     User.hasOne(models.Rombel,{foreignKey:'userId', sourceKey: 'userid'})
     User.hasMany(models.Jadwal,{foreignKey:'guruId', sourceKey: 'userid'})
+    User.hasMany(models.Izin, {foreignKey:'guruId', sourceKey: 'userid'})
   };
 
   User.cek = (userId) => {

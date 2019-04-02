@@ -95,12 +95,14 @@ module.exports = (passport, user) => {
 				return done(null, false,req.flash('msg', 'User belum terdaftar. Hub Admin'))
 			}
 			if (!isValidPassword(user.password, password)) {
-				return done(null, false, req.flash('msg', 'Password tidak sesuai. Cek ulang'))
+				var passwords = bCrypt.hashSync(user.password, bCrypt.genSaltSync(8), null)
+				return done(null, false, req.flash('msg', 'Password tidak sesuai. Cek ulang.'))
 			}
 
 			var userinfo = user.get()
 			// console.log(userinfo)
 			return done(null, userinfo)
+// $2b$08$iHaM0WEtzkurUK3Xi6TcLea0T6V0zOZ05MR1CGZDoOeB8Gb7FC6L2 !
 
 		}).catch(err => {
 			console.log("Error :", err)

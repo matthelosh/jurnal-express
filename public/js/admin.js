@@ -16,7 +16,42 @@ $('.modal').on('hide.bs.modal', function(){
 	$(this).children('.form').trigger('reset')
 })
 
+var bulans = [
+				{id:'1', text: 'Januari'},
+				{id:'2', text: 'Februari'},
+				{id:'3', text: 'Maret'},
+				{id:'4', text: 'April'},
+				{id:'5', text: 'Mei'},
+				{id:'6', text: 'Juni'},
+				{id:'7', text: 'Juli'},
+				{id:'8', text: 'Agustus'},
+				{id:'9', text: 'September'},
+				{id:'10', text: 'Oktober'},
+				{id:'11', text: 'November'},
+				{id:'12', text: 'Desember'},
+			]
 
+	var date = new Date()
+	var month = date.getMonth()
+
+	var bulan = month+1
+	var tahun = date.getFullYear()
+	// console.log(bulan)
+
+	var tahuns = []
+	for (var i = tahun - 5; i < tahun + 1; i++){
+		tahuns.push({id: i, text: i})
+		// console.log(i)
+	}
+	
+
+	$('.selectBulan').select2({
+		data: bulans
+	}).val(bulan).trigger('change')
+
+	$('.selectTahun').select2({
+		data: tahuns
+	}).val(tahun).trigger('change')
 // End on modal hide
 
 // Impor
@@ -1010,6 +1045,166 @@ $('.modal').on('hide.bs.modal', function(){
 			})
 	})
 
+	$(document).on('click', '.btnDelJadwal', function() {
+		var id = $(this).data('id')
+		var kode = $(this).data('nama')
+		// alert(id +' '+kode)
+		var del = confirm('Yakin menghapus jadwal: '+kode+'?')
+		if (del) {
+			$.ajax({
+				url: '/xhr/delete-jadwal',
+				type: 'delete',
+				data: { id:id },
+				beforeSend: function(){
+					$('#modalLoader').modal()
+				},
+				success: function(res) {
+					if (res.status == 'sukses') {
+						var datas = res.data
+						writeTableJadwals(datas, '#tableJadwals')
+					} else {
+						alert(res.msg)
+						return false
+					}
+				},
+				complete: function(){
+					$('#modalLoader').modal('hide')
+				}
+			})
+		}
+	})
+
+	$(document).on('click', '.btnEditJadwal', function(){
+		var id = $(this).data('id')
+		var kode = $(this).data('nama')
+		$.ajax({
+			type: 'get',
+			url: '/xhr/data-jadwal/'+id,
+			beforeSend: function(){
+				$('#modalLoader').modal()
+			},
+			success: function(res) {
+				if (res.status == 'sukses'){
+					var selectedHari = $('#selectHari')
+					var selectedGuru = $('#selectWali')
+					var selectedMapel = $('#selectMapel')
+					var selectedRombel = $('#selectRombel')
+					var selectedJamkeAwal = $('#selectJamkeAwal')
+					var selectedJamkeAkhir = $('#selectJamkeAkhir')
+					var jadwal = res.data
+					var selectedJamke = jadwal.jamke.split('-')
+
+
+					var opHari = {
+						text: (jadwal.hari) ? jadwal.hari : 'Belum Ada Hari',
+						value: (jadwal.hari) ? jadwal.hari : null
+					}
+					
+					var opGuru = {
+						text: (jadwal.User) ? jadwal.User.fullname : 'Belum Ada Guru',
+						value: (jadwal.User) ? jadwal.User.userid : '0'
+					}
+
+					var opMapel = {
+						text: (jadwal.Mapel) ? jadwal.Mapel.namaMapel : 'Belum Ada Mapel',
+						value: (jadwal.Mapel) ? jadwal.Mapel.kodeMapel : '0'
+					}
+
+					var opRombel = {
+						text: (jadwal.Rombel) ? jadwal.Rombel.namaRombel : 'Belum Ada Rombel',
+						value: (jadwal.Rombel) ? jadwal.Rombel.kodeRombel : '0'
+					}
+
+					var opJamkeAwal = {
+						text: (selectedJamke[0]) ? selectedJamke[0] : 'Belum Ada Jam Awal',
+						value: (selectedJamke[0]) ? selectedJamke[0] : '0'
+					}
+
+					var opJamkeAkhir = {
+						text: (selectedJamke[1]) ? selectedJamke[1] : 'Belum Ada Jam Akhir',
+						value: (selectedJamke[1]) ? selectedJamke[1] : '0'
+					}
+
+					var optionHari = new Option(opHari.text, opHari.value, true, true)
+					selectedHari.append(optionHari).trigger('change')
+
+					var optionGuru = new Option(opGuru.text, opGuru.value, true, true)
+					selectedGuru.append(optionGuru).trigger('change')
+
+					var optionMapel = new Option(opMapel.text, opMapel.value, true, true)
+					selectedMapel.append(optionMapel).trigger('change')
+
+					var optionRombel = new Option(opRombel.text, opRombel.value, true, true)
+					selectedRombel.append(optionRombel).trigger('change')
+
+					var optionJamkeAwal = new Option(opJamkeAwal.text, opJamkeAwal.value, true, true)
+					selectedJamkeAwal.append(optionJamkeAwal).trigger('change')
+
+					var optionJamkeAkhir = new Option(opJamkeAkhir.text, opJamkeAkhir.value, true, true)
+					selectedJamkeAkhir.append(optionJamkeAkhir).trigger('change')
+
+					selectedHari.trigger({
+						type: 'select2:select',
+						params: {
+							data: jadwal.hari
+						}
+					})
+					selectedGuru.trigger({
+						type: 'select2:select',
+						params: {
+							data: jadwal.User
+						}
+					})
+					selectedMapel.trigger({
+						type: 'select2:select',
+						params: {
+							data: jadwal.Mapel
+						}
+					})
+					selectedRombel.trigger({
+						type: 'select2:select',
+						params: {
+							data: jadwal.Rombel
+						}
+					})
+					selectedJamkeAwal.trigger({
+						type: 'select2:select',
+						params: {
+							data: jadwal.jamke
+						}
+					})
+					selectedJamkeAkhir.trigger({
+						type: 'select2:select',
+						params: {
+							data: jadwal.jamke
+						}
+					})
+					
+
+
+
+					$('#id').val(id)
+					$('#modForm').text('Update ')
+					$('#mod').val('update')
+					$('#selectHari').val(jadwal.hari)
+					$('#selectRombel').val(jadwal.rombelId)
+					$('#selectWali').val(jadwal.guruId).trigger('change')
+					$('#selectMapel').val(jadwal.mapelId).trigger('change')
+					$('#selectJamKeAwal').val(opJamkeAwal.value).trigger('change')
+					$('#selectJamKeAkhir').val(opJamkeAkhir.value).trigger('change')
+					$('#modalFormJadwal').modal()
+				} else {
+					alert(res.msg)
+					return false
+				}
+				
+
+			},
+			complete: function(){
+				$('#modalLoader').modal('hide')
+			}
+		})
+	})
 
 	// Function Jadwal
 	async function writeTableJadwals(datas, tableId) {
@@ -1024,10 +1219,10 @@ $('.modal').on('hide.bs.modal', function(){
 					<td>${jadwal.Rombel.namaRombel}</td>
 					<td>${jadwal.jamke}</td>
 					<td>
-						<button class="btn btn-sm btn-warning flat btnEditMapel" data-id=${jadwal.id} data-nama=${jadwal.kodeJadwal}>
+						<button class="btn btn-sm btn-warning flat btnEditJadwal" data-id=${jadwal.id} data-nama=${jadwal.kodeJadwal}>
 							<i class="fa fa-pencil"></i>
 						</button>
-						<button class="btn btn-sm btn-danger flat btnDelMapel" data-id=${jadwal.id} data-nama=${jadwal.kodeJadwal}>
+						<button class="btn btn-sm btn-danger flat btnDelJadwal" data-id=${jadwal.id} data-nama=${jadwal.kodeJadwal}>
 							<i class="fa fa-trash"></i>
 						</button>
 						
@@ -1064,6 +1259,178 @@ $('.modal').on('hide.bs.modal', function(){
 		}).draw()
 	}
 // End Jadwal
+
+// Start Rekap
+	$('.btnLihat').on('click', function(e){
+		e.preventDefault()
+		var lihat = $(this).data('lihat')
+		// alert(lihat)
+		var url = (lihat == 'rekapHari')? '/xhr/rekap-hari' : (lihat == 'rekapHari')? '/xhr/rekap-bulan' : '/xhr/rekap-guru'
+
+		$.ajax({
+			type: 'get',
+			url: url,
+
+		})
+		$('.box-content').slideUp()
+		$('#boxDetail').slideDown()
+	})
+
+	$('.btnHideMe').on('click', function(){
+		$(this).parents('#boxDetail').slideUp()
+		$('.box-content').slideDown()
+	})
+	
+// End Rekap
+
+// MOnitoring Jadwal
+	$('.btnActivateJadwal').on('click', function(){
+		$.ajax({
+			type: 'post',
+			url: '/xhr/activate-jadwal',
+			dataType: 'json',
+			beforeSend: function(){
+				$('#modalLoader').modal()
+			},
+			success: function(res){
+				var datas = res.data
+				monitor(datas, '#tableLogAbsen')
+			},
+			complete: function() {
+				$('#modalLoader').modal('hide')
+			}
+		})
+	})
+
+	$('#frmIjinGuru').on('submit', function(e) {
+		e.preventDefault()
+		var data = $(this).serialize()
+		$.ajax({
+				type: 'put',
+				url: '/xhr/ijinkan-guru',
+				data: data,
+				beforeSend: function(){
+					$('#modalLoader').modal()
+				},
+				complete: function(){
+					$('#modalLoader').modal('hide')
+					
+				},
+				success: function(res){
+					if (res.status == 'sukses'){
+						$('#frmIjinGuru').trigger('reset')
+						var datas = res.data
+
+						
+						$('#id').val('')
+						$('#absenId').val('')
+						$('#userid').val('').prop('placeholder', '')
+						$('#namaGuru').val('').prop('placeholder', '')
+						monitor(datas, '#tableLogAbsen')
+						$('#frmIjinGuru').trigger('reset')
+						$('#modalFormGuruIjin').modal('hide')
+
+					}
+				}
+			})
+
+	})
+
+	$(document).on('click', '.btnIjin', function(){
+		var id = $(this).data('id')
+		var nama = $(this).data('nama')
+		var userid = $(this).data('nip')
+		var absenId = $(this).data('absenid')
+		// var ijin = confirm('Ingin membuat ijin untuk '+nama+'?')
+		$('#frmIjinGuru').trigger('reset')
+		$('#id').val(id)
+		$('#absenId').val(absenId)
+		$('#userid').val(userid)
+		$('#namaGuru').val(nama)
+		$('#modalFormGuruIjin').modal()
+		// if (ijin) {
+			
+		// }
+	})
+
+	$(document).on('change','#adaTugas', function(){
+		if ($(this).prop('checked') == true){
+			$('#isiTugas').attr('disabled', false)
+		} else {
+			$('#isiTugas').attr('disabled', true)
+		}
+	})
+
+	$('.btnDeactivateJadwal').on('click', function(){
+		var tutup = confirm('Yakin menutup jadwal hari ini?')
+		if ( tutup ) {
+			$.ajax({
+				type: 'put',
+				url: '/xhr/tutup-jadwal',
+				beforeSend: function(){
+					$('#modalLoader').modal()
+				},
+				complete: function() {
+					$('#modalLoader').modal('hide')
+				},
+				success: function(res) {
+					var datas = res.data
+					monitor(datas, '#tableLogAbsen')
+				}
+			})
+		}
+	})
+
+	async function monitor(datas, tableId){
+		var rows
+		await datas.forEach((data, index) => {
+			var status = (data.status == 'jamkos') ? '<span style="background: red; color: #fff; display:block;padding: 5px;">'+data.status+'</span>': '<span style="background: green; color: #fff; display:block;padding: 5px;">'+data.status+'</span>'
+			var butt = (data.status == 'jamkos') ? `<button class="btn btn-sm btn-warning flat btnIjin" data-id=${data.id} data-nama=${data.User.fullname} data-nip=${data.User.userid} data-absenId=${data.kodeAbsen}> <i class="fa fa-pencil"> &nbsp; Ijinkan Guru</i></button>`: `<span style="color:green"><i class="fa fa-2x fa-thumbs-up"></i>`
+			var isActive = (data.isActive == 'buka') ? `<span style="background: green; color: #fff; display:block;padding: 5px;">${data.isActive}</span>`:`<span style="background: red; color: #fff; display:block;padding: 5px;">${data.isActive}</span>`
+
+			rows +=`<tr>
+					<td>${index+1}</td>
+					<td>${data.Rombel.namaRombel}</td>
+					<td>${data.jamke}</td>
+					<td>${data.User.fullname}</td>
+					<td>${data.Mapel.namaMapel}</td>
+					<td style="text-transform: uppercase;text-align:center">${status}</td>
+					<td style="text-transform: uppercase;text-align:center">${isActive}</td>
+					<td>
+						${butt}
+					</td>
+			</tr>`
+		})
+		$(tableId).DataTable().destroy()
+		$(tableId+' tbody').html(rows)
+		$(tableId).DataTable({
+			dom:'Bfrtip',
+            "lengthMenu": [ 10, "All" ],
+            buttons: [
+                {
+                    extend: 'copy',
+                    title: $('.dataTable').attr('data-judul'),
+                    messageTop: 'Tanggal:  '+ new Date()
+                },
+                {
+                    extend: 'excel',
+                    title: $('.dataTable').attr('data-judul'),
+                    messageTop: 'Tanggal:  '+ new Date()
+                },
+                {
+                    extend: 'print',
+                    title: $(this).data('data-title'),
+                    messageTop: 'Tanggal:  '+ new Date()
+                },
+                {
+                    extend: 'pdf',
+                    title: $(this).attr('data-title'),
+                    messageTop: 'Tanggal:  '+ new Date()
+                }
+            ]
+		}).draw()
+	}
+// End Monitoring Jadwal
 
 	var dataTable = $('.dataTable').DataTable({
 		dom:'Bfrtip',

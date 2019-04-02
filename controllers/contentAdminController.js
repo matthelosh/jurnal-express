@@ -2,6 +2,12 @@ var exports = module.exports = {}
 
 var models = require('./../models')
 
+var d = new Date()
+var tgl = (d.getDate() <= 9)? '0'+d.getDate():d.getDate()
+var bln = ((d.getMonth()+1) <= 9)? '0'+(d.getMonth()+1):d.getMonth()+1
+var th = d.getFullYear()
+var tanggalHariIni = th+'-'+bln+'-'+tgl
+
 exports.menu = (req,res) => {
 	var me = req.user
 	switch(req.params.menu) {
@@ -10,7 +16,7 @@ exports.menu = (req,res) => {
 			var User = models.User
 			User.findAll().then(users => {
 				if (users) {
-					res.render('blankpage', {title: 'Manajemen User', user:me, status: 'ok', 'p' : req.params.menu, data: users})
+					res.render('blankpage', {title: 'Manajemen User'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', 'p' : req.params.menu, data: users})
 				}
 			})
 			
@@ -19,7 +25,7 @@ exports.menu = (req,res) => {
 			var Siswa = models.Siswa
 			Siswa.findAll({include:[models.Rombel]}).then(siswas => {
 				if (siswas) {
-					res.render('blankpage', { title: 'Manajemen Siswa', user:me, status: 'ok', 'p' : req.params.menu, data: siswas })
+					res.render('blankpage', { title: 'Manajemen Siswa'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', 'p' : req.params.menu, data: siswas })
 					// console.log(siswas)
 				}
 			})
@@ -28,7 +34,7 @@ exports.menu = (req,res) => {
 		case 'rombel': 
 			var Rombel = models.Rombel
 			Rombel.findAll({include:[ models.User ]}).then(rombels => {
-				res.render('blankpage', {title: 'Manajemen Rombel', user:me, status: 'ok', 'p' : req.params.menu, data: rombels})
+				res.render('blankpage', {title: 'Manajemen Rombel'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', 'p' : req.params.menu, data: rombels})
 				// res.json(rombels)
 				// console.log(rombels)
 			})
@@ -37,20 +43,39 @@ exports.menu = (req,res) => {
 			var Mapel = models.Mapel
 			Mapel.findAll()
 				.then(mapels => {
-					res.render('blankpage', {title: 'Manajemen Mapel', user:me, status: 'ok', p : req.params.menu, data: mapels})
+					res.render('blankpage', {title: 'Manajemen Mapel'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', p : req.params.menu, data: mapels})
 				})
 		break
 		case 'jadwal':
 			var Jadwal = models.Jadwal
 			Jadwal.findAll({include: [models.User, models.Mapel, models.Rombel]})
 				.then(jadwals => {
-					res.render('blankpage', { title: 'Manajemen Jadwal', user:me, status: 'ok', p: req.params.menu, data: jadwals })
+					res.render('blankpage', { title: 'Manajemen Jadwal'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data: jadwals })
 					// console.log(jadwals)
 				})
 		break
 
+		case 'rekap':
+			res.render('blankpage', { title: 'Rekap Absensi'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data:'' })
+		break
+
+		case 'monitor':
+			var LogAbsen = models.LogAbsen
+			LogAbsen.findAll({
+				where: {tanggal: tanggalHariIni},
+				include: [models.User, models.Rombel, models.Mapel],
+				order: ['rombelId']
+			}).then(logabsens => {
+				res.render('blankpage', { title: 'Monitor Pembelajaran'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data:logabsens })
+				console.log(tanggalHariIni,logabsens)
+			}).catch(err=>{
+				console.log(err)
+			})
+			
+		break
+
 		default:
-			res.send(req.params.menu)
+			res.render('blankpage', {title: req.params.menu+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data:'Maaf! Fitur ini masih belum ada / dikembangkan. :)'})
 		break;
 	}
 }
