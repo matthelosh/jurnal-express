@@ -1,0 +1,40 @@
+.row
+	.container-fluid
+		.col-xs-12
+			.box
+				.box-header
+					h4 Rekap Absen Kelas #{user.rombel}
+				.box-body
+					form.form#formRekapWali
+						input(type="hidden" name="rombelId" value=`${user.rombel}`)
+						.form-group.col-xs-12.col-sm-3
+							//- label(for="bulan")
+							input.form-control.selectBulan#bulan(type="text" name="bulan")
+						.form-group.col-xs-12.col-sm-2
+							//- label(for="tahun")
+							input.form-control.selectTahun#tahun(type="text" name="tahun")
+						.form-group.col-xs-12.col-sm-2
+							button.btn.btn-info.flat#btnRekapWali
+								i.fa.fa-search
+								| &nbsp; Lihat
+			
+.row#dataRekapku
+	.container-fluid
+		.col-xs-12
+			.box
+				.box-header
+					h4 Rekap Absensi Kelas #{user.rombel}
+						br
+						small Bulan: &nbsp;
+							span#bulanRekap
+				.box-body
+					.table-responsive
+						table.table.order-column.bordered.condensed.row-border#tableRekapWali(width="100%" style="width:100%" data-judul=`Rekap Absensi kelas ${user.rombel}`)
+							thead
+								tr
+									//- th No
+									//- th NIS
+									//- th Nama
+									
+							tbody
+								

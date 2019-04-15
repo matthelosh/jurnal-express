@@ -10,6 +10,10 @@ var logger = require('morgan')
 var flash = require('connect-flash')
 var settings = require('./config/settings')
 var favicon = require('express-favicon')
+// var cron = require('node-cron')
+var CronJob = require('cron').CronJob
+var fs = require('fs')
+var Logabsen = require('./controllers/LogAbsenController.js')
 
 
 // /favicon/
@@ -18,7 +22,7 @@ app.use(favicon(__dirname+'/public/img/logo-jas.png'))
 app.use(bodyParser.json({limit: "50mb"}))
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
-app.use(session({secret: 'jurnal-express', resave: false, saveUninitialized: true}))
+app.use(session({secret: process.env.SECRET ,resave: false, saveUninitialized:false, cookie: {maxAge:null}}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
@@ -63,40 +67,38 @@ models.sequelize.sync().then(function() {
 // var User = models.User
 // var Rombel = models.Rombel
 app.use('/', web)
-// app.get('/', function(req,res){
-// 	// User.create({
-// 	// 	userid: 'bejo',
-// 	// 	password: '12345',
-// 	// 	fullname: 'Bejo K',
-// 	// 	hp: '8078789',
-// 	// 	level: '1',
-// 	// 	isActive: '1'
-// 	// }).then(user => {
-// 	// 	Rombel.create({
-// 	// 		kodeRombel: 'xtkj1',
-// 	// 		namaRombel: 'X TKJ 1'
-// 	// 	})
-// 	// })
-// 	console.log(User)
-// 	User.findAll({
-// 		include: [Rombel]
-// 	}).then(users => {
-// 		res.json(users)
-// 	})
-// 	// Rombel.findAll({
-// 	// 	include: [User]
-// 	// }
-// 	// 	).then(rombels => {
-// 	// 	res.json(rombels)
-// 	// })
-// })
+
 app.use('/xhr', ajaxRoute)
 app.use('*', (req,res, next) => {
 	res.status(404).redirect('/404')
 })
 require('browser-refresh-client').isBrowserRefreshEnabled();
+// const CronJob = require 
+
+const Tasks = [
+		{
+			time: '33 23 * * * ', msg: function(){ Logabsen.activate()}
+		},
+		{
+			time: '10 29 23 * * * ', msg: 'Tugas 2'
+		}
+	]
+const crons = {}
+Tasks.forEach((task, index) => {
+	crons[index] = new CronJob(task.time, function(){
+		task.msg()
+	}, null, true, 'Asia/Jakarta')
+})
+// const task1 = new CronJob('* 23 23 * * *', function() {
+// 	console.log('Hi')
+// }, null, true, 'Asia/Jakarta')
+// const task2 = new CronJob('25 23 * * *', function() {
+// 	console.log('Salam')
+// }, null, true, 'Asia/Jakarta')
+
+
 app.listen(port, () => {
-	console.log(app.locals.siteTitle)
+	// console.log(app.locals.siteTitle)
 	if (process.send) {
     process.send({ event:'online', url:'http://localhost:3000/' });
 }

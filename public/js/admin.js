@@ -1293,8 +1293,22 @@ var bulans = [
 				$('#modalLoader').modal()
 			},
 			success: function(res){
-				var datas = res.data
-				monitor(datas, '#tableLogAbsen')
+				if(res.status == 'sukses') {
+					var datas = res.data
+					if (datas.length < 1){
+						$('.table-responsive').html(res.msg)
+
+					}
+					monitor(datas, '#tableLogAbsen')
+				} else if (res.status == 'gagal' && (/EFATAL: Error: getaddrinfo ENOTFOUND/i.test(res.msg.message))){
+					// if(/EFATAL: Error: getaddrinfo ENOTFOUND/i.test(res.data.message)){
+						var datas = res.data
+						monitor(datas, '#tableLogAbsen')
+						alert('Tidak ada sambungan ke server telegram. Hub admin')
+					// }
+				} else {
+
+				}
 			},
 			complete: function() {
 				$('#modalLoader').modal('hide')
@@ -1383,6 +1397,7 @@ var bulans = [
 
 	async function monitor(datas, tableId){
 		var rows
+		try {
 		await datas.forEach((data, index) => {
 			var status = (data.status == 'jamkos') ? '<span style="background: red; color: #fff; display:block;padding: 5px;">'+data.status+'</span>': '<span style="background: green; color: #fff; display:block;padding: 5px;">'+data.status+'</span>'
 			var butt = (data.status == 'jamkos') ? `<button class="btn btn-sm btn-warning flat btnIjin" data-id=${data.id} data-nama=${data.User.fullname} data-nip=${data.User.userid} data-absenId=${data.kodeAbsen}> <i class="fa fa-pencil"> &nbsp; Ijinkan Guru</i></button>`: `<span style="color:green"><i class="fa fa-2x fa-thumbs-up"></i>`
@@ -1429,34 +1444,48 @@ var bulans = [
                 }
             ]
 		}).draw()
+		} catch(err){
+			console.log(err)
+		}
 	}
 // End Monitoring Jadwal
 
+// Sidebar 
+	$('.sidebar a').on('click', function(){
+		$(this).parent('li').addClass('active')
+		// $(this).not('selector')
+	})
+// End Sidebar
+
 	var dataTable = $('.dataTable').DataTable({
 		dom:'Bfrtip',
-            "lengthMenu": [ 10, "All" ],
-            buttons: [
-                {
-                    extend: 'copy',
-                    title: $('.dataTable').attr('data-judul'),
-                    messageTop: 'Tanggal:  '+ new Date()
-                },
-                {
-                    extend: 'excel',
-                    title: $('.dataTable').attr('data-judul'),
-                    messageTop: 'Tanggal:  '+ new Date()
-                },
-                {
-                    extend: 'print',
-                    title: $(this).data('data-title'),
-                    messageTop: 'Tanggal:  '+ new Date()
-                },
-                {
-                    extend: 'pdf',
-                    title: $(this).attr('data-title'),
-                    messageTop: 'Tanggal:  '+ new Date()
-                }
-            ]
+        "lengthMenu": [ 10, "All" ],
+        buttons: [
+            {
+                extend: 'copy',
+                title: $('.dataTable').attr('data-judul'),
+                messageTop: 'Tanggal:  '+ new Date()
+            },
+            {
+                extend: 'excel',
+                title: $('.dataTable').attr('data-judul'),
+                messageTop: 'Tanggal:  '+ new Date()
+            },
+            {
+                extend: 'print',
+                title: $(this).data('data-title'),
+                messageTop: 'Tanggal:  '+ new Date()
+            },
+            {
+                extend: 'pdf',
+                title: $(this).attr('data-title'),
+                messageTop: 'Tanggal:  '+ new Date()
+            }
+        ],
+        "language": {
+	      "emptyTable": $(this).data('noresults')
+	    }
+
 	})
 	// dataTable.ajax.reload()
 

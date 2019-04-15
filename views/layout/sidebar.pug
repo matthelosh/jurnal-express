@@ -1,6 +1,21 @@
 aside.main-sidebar
 	section.sidebar
+		.user-panel
+			.pull-left.image
+				img(src="/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image")
+			.pull-left.info
+				p #{user.fullname}
+					br
+					small NIP. &nbsp;
+						span#nip #{user.userid}
 		ul.sidebar-menu(data-widget="tree")
+			li.header 
+				if user.level =='1'
+					| MENU ADMIN
+				else if user.level =='2'
+					| MENU GURU
+				else if user.level =='3'
+					| MENU STAF
 			//- Jika admin
 			if (user.level == '1')
 				li
@@ -11,15 +26,15 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'users') ? 'active': null}`)
 					a(href="/dashboard/admin/users")
 						i.fa.fa-users
 						span
 							| Manajemen Pengguna
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
-				li
+								| hot
+				li(class=`${(p == 'siswas') ? 'active': null}`)
 					a(href="/dashboard/admin/siswas")
 						i.fa.fa-child
 						span
@@ -27,7 +42,7 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'mapel') ? 'active': null}`)
 					a(href="/dashboard/admin/mapel")
 						i.fa.fa-book
 						span
@@ -35,7 +50,7 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'rombel') ? 'active': null}`)
 					a(href="/dashboard/admin/rombel")
 						i.fa.fa-university
 						span
@@ -43,7 +58,7 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'jadwal') ? 'active': null}`)
 					a(href="/dashboard/admin/jadwal")
 						i.fa.fa-calendar-o
 						span
@@ -51,7 +66,7 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'rekap') ? 'active': null}`)
 					a(href="/dashboard/admin/rekap")
 						i.fa.fa-line-chart
 						span
@@ -59,7 +74,7 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'monitor') ? 'active': null}`)
 					a(href="/dashboard/admin/monitor")
 						i.fa.fa-desktop
 						span
@@ -67,7 +82,7 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-				li
+				li(class=`${(p == 'settings') ? 'active': null}`)
 					a(href="/dashboard/admin/settings")
 						i.fa.fa-gears
 						span
@@ -75,5 +90,48 @@ aside.main-sidebar
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
 								| Hot
-
+			
+			if (user.level == '2')
+				li
+					a(href="/dashboard/guru/beranda")
+						i.fa.fa-home
+						span
+							| Beranda
+						span.pull-right-container
+							small.label.pull-right.bg-maroon
+								| Hot
+				li(class=`${(p == 'jadwal') ? 'active': null}`)
+					a(href="/dashboard/guru/jadwal")
+						i.fa.fa-calendar
+						span
+							| Jadwal
+						span.pull-right-container
+							small.label.pull-right.bg-maroon
+								| Hot
+				li(class=`${(p == 'absenku') ? 'active': null}`)
+					a(href="/dashboard/guru/absenku")
+						i.fa.fa-table
+						span
+							| Catatan Absen
+						span.pull-right-container
+							small.label.pull-right.bg-maroon
+								| Hot
+				li(class=`${(p == 'jurnalku') ? 'active': null}`)
+					a(href="/dashboard/guru/jurnalku")
+						i.fa.fa-book
+						span
+							| Jurnal Pribadi
+						span.pull-right-container
+							small.label.pull-right.bg-maroon
+								| Hot
+			if user.level == '2' && user.wali =='benar' 
+				li.header MENU WALI KELAS
+				li(class=`${(p == 'rekap-absen') ? 'active': null}`)
+					a(href="/dashboard/guru/rekap-absen")
+						i.fa.fa-list-ol
+						span
+							| Rekap Absen 
+						span.pull-right-container
+							small.label.pull-right.bg-maroon
+								| hot
 			//- End jika admin

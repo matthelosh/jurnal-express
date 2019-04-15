@@ -1,0 +1,60 @@
+.row
+	.container-fluid
+		.col-sm-4
+			.box
+				.box-header
+					h3.box-title
+						i.fa.fa-clock-o &nbsp;
+						span.hidden-xs Jam Pelajaran
+					.box-tools.pull-right
+						button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							i.fa.fa-minus
+						button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							i.fa.fa-times
+				.box-body
+					h4 Jam Hari Ini
+					.table-responsive
+						table.table.table-condensed#tableJampels
+							thead
+								tr
+									th Jampel
+									th Mulai
+									th Selesai
+									th Edit
+
+							tbody
+								each jampel,index in data.jampels
+									tr
+										td #{jampel.id}
+										td #{jampel.awal}
+										td #{jampel.akhir}
+										td 
+											button.btn.btn-sm.btn-warning#btnEditJampel(data-id=`${data.id}`)
+												i.fa.fa-pencil
+
+		.col-sm-4
+			.box
+				.box-header
+					h3.box-title
+						i.fa.fa-clock &nbsp;
+						span.hidden-xs Pengaturan Jam Pelajaran
+					.box-tools.pull-right
+						button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							i.fa.fa-minus
+						button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							i.fa.fa-times
+				.box-body
+
+		.col-sm-4
+			.box
+				.box-header
+					h3.box-title
+						i.fa.fa-clock &nbsp;
+						span.hidden-xs Pengaturan Jam Pelajaran
+					.box-tools.pull-right
+						button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							i.fa.fa-minus
+						button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							i.fa.fa-times
+				.box-body
+		

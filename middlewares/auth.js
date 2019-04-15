@@ -40,6 +40,6 @@ module.exports = {
 		if (req.isAuthenticated() && req.user.level == '1') {
 			return next()
 		}
-		res.redirect('/login')
+		res.redirect('/403')
 	}
 }

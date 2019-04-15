@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   Siswa.associate = function(models) {
     // associations can be defined here
     Siswa.belongsTo(models.Rombel, {foreignKey: 'kelasId', targetKey:'kodeRombel'})
+    Siswa.hasMany(models.Absen, {foreignKey: 'siswaId', sourceKey:'nis'})
   };
 
   Siswa.hapus = (id) => {

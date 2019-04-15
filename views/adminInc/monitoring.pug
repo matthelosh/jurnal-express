@@ -1,0 +1,168 @@
+.box
+	.box-header
+		h3.box-title
+			i.fa.fa-users &nbsp;
+			span.hidden-xs Log Pembelajaran
+		.box-tools.pull-right
+			button.btn-info.btnUbahJampel(type='button', data-toggle='modal', data-target="#modalUbahJampel" ,title='Ubah Jampel' style="color:white").btn.btn-box-tool.flat
+				i.fa.fa-clock-o
+				| &nbsp; Ubah Jampel
+			button.btn-danger.btnDeactivateJadwal(type='button', data-toggle='tooltip',title='Tutup Jadwal' style="color:white").btn.btn-box-tool.flat
+				i.fa.fa-power-off
+				| &nbsp; Tutup Jadwal
+			button.btn-success.btnActivateJadwal(type='button', data-toggle='tooltip',title='Aktifkan Jadwal' style="color:white").btn.btn-box-tool.flat
+				i.fa.fa-flash
+				| &nbsp; Aktifkan Jadwal
+			button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+				i.fa.fa-minus
+			button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+				i.fa.fa-times
+	.box-body
+		.table-responsive
+			table.table.table-bordered.table-condensed.dataTable#tableLogAbsen(data-judul="Data Pengguna" data-no-results="Jadwal hari ini belum aktif. Hubungi admin. :)")
+				caption Log Pembelajaran Hari Ini
+				thead
+					tr
+						th No
+						th Kelas
+						//- th Password
+						th Jam Ke
+						th Guru
+						th Mapel
+						th Status
+						th Aktif?
+						th Opsi
+				tbody#tbodyLogAbsen
+					each jadwal, index in data
+						tr
+							td #{index+1}
+							td #{jadwal.Rombel.namaRombel}
+							//- td #{user.password}
+							td #{jadwal.jamke}
+							td #{jadwal.User.fullname}
+							td #{jadwal.Mapel.namaMapel}
+							td(style="text-transform: uppercase;text-align:center")
+								if (jadwal.status == 'jamkos')
+									span(style="background: red; color: #fff; display:block;padding: 5px;") #{jadwal.status}
+								else 
+									span(style="background: green; color: #fff; display:block;padding: 5px;") #{jadwal.status}
+							td(style="text-transform: uppercase;text-align:center") 
+								if (jadwal.isActive == 'buka') 
+									span(style="background: green; color: #fff; display:block;padding: 5px;") #{jadwal.isActive}
+								else 
+									span(style="background: green; color: #fff; display:block;padding: 5px;") #{jadwal.isActive}
+							td(style="text-align:center")
+								if(jadwal.status == 'jamkos')
+									button.btn.btn-sm.btn-warning.flat.btnIjin(
+										data-id=jadwal.id
+										data-nama=jadwal.User.fullname
+										data-nip=jadwal.User.userid
+										data-absenId=jadwal.kodeAbsen)
+										i.fa.fa-pencil
+										span.hidden-xs.text-center Ijinkan Guru
+								else
+									span(style="color: green;") 
+										i.fa.fa-2x.fa-thumbs-up
+								
+	.box-footer
+		| Footer
+
+.modal#modalFormGuruIjin
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Izinkan Guru Nama
+			.modal-body
+					form.form#frmIjinGuru(method="post" action="")
+						input#id(type="hidden" name="id" value="")
+						input#absenId(type="hidden" name="absenId" value='')
+						input#mod(type="hidden" name="mod" value="create")
+						.form-group
+							label Guru
+							input.form-control#userid(name="userid" placeholder="User Name" required)
+						.form-group
+							label Nama Guru
+							input.form-control#namaGuru(name="namaGuru" placeholder="Nama Guru" required)
+						.form-group
+							label 
+								input#adaTugas(type="checkbox" name="adaTugas")
+								| &nbsp; Ada Tugas?
+						.form-group
+							label Tugas
+							textarea.form-control#isiTugas(name="isiTugas" placeholder="Isi Tugas" disabled)
+						.form-group.center-block
+							button.btn.flat.btn-primary#btnIjinkan
+								i.fa.fa-save
+								| &nbsp; Simpan
+							button.btn.flat.btn-warning#reset(type="reset")
+								i.fa.fa-save
+								| &nbsp; Reset
+
+.modal#modalUbahJampel
+	.modal-dialog
+		.modal-content.modal-sm
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Ubah Jampel
+			.modal-body
+				form.form#formUbahJampel
+					.form-group
+						label(for="jamke1") Jam 1
+						input.form-control#jamke1(placeholder="Jamke 1" name="jamke1")
+					.form-group
+						label(for="jamke2") Jam 2
+						input.form-control#jamke2(placeholder="Jamke 2" name="jamke2")
+					.form-group
+						label(for="jamke3") Jam 3
+						input.form-control#jamke3(placeholder="Jamke 3" name="jamke3")
+					.form-group
+						label(for="jamke4") Jam 4
+						input.form-control#jamke4(placeholder="Jamke 4" name="jamke4")
+					.form-group
+						label(for="ist1") Istirahat #1
+						input.form-control#ist1(placeholder="Istirahat Pertama" name="ist1")
+					.form-group
+						label(for="jamke5") Jam 5
+						input.form-control#jamke5(placeholder="Jamke 5" name="jamke5")
+					.form-group
+						label(for="jamke6") Jam 6
+						input.form-control#jamke6(placeholder="Jamke 6" name="jamke6")
+					.form-group
+						label(for="ist2") Istirahat #2
+						input.form-control#ist2(placeholder="Istirahat Kedua", name="ist2")
+					.form-group
+						label(for="jamke7") Jam 7
+						input.form-control#jamke7(placeholder="Jamke 7" name="jamke7")
+					.form-group
+						label(for="jamke8") Jam 8
+						input.form-control#jamke8(placeholder="Jamke 8" name="jamke8")
+					.form-group
+						label(for="jamke9") Jam 9
+						input.form-control#jamke9(placeholder="Jamke 9" name="jamke9")
+					.form-group
+						label(for="jamke10") Jam 10
+						input.form-control#jamke10(placeholder="Jamke 10")
+					.form-group
+						button.btn.btn-info#btnUbahJampel
+							i.fa.fa-bell
+							| &nbsp; Simpan
+					
+.modal#modalImport
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Impor user
+			.modal-body
+					form.form#frmImportUser(method="post" action="" enctype="multipart/form-data")
+						.form-group
+							label File Excel
+							input.form-control#file(name="file" type="file" placeholder="File" required)
+						.form-group
+							button.btn.flat.btn-success.center-block#btnImportNow(data-content="users")
+								i.fa.fa-save
+								| &nbsp; Import

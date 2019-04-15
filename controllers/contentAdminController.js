@@ -74,6 +74,20 @@ exports.menu = (req,res) => {
 			
 		break
 
+		case "settings":
+			var Jampel = models.Jampel
+			var data = {}
+			async function getData(){
+				await Jampel.findAll().then(jampels => {
+					data.jampels = jampels
+				})
+
+				res.render('blankpage', { title: 'Pengaturan'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data:data })
+			}
+			getData()
+			
+		break
+
 		default:
 			res.render('blankpage', {title: req.params.menu+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data:'Maaf! Fitur ini masih belum ada / dikembangkan. :)'})
 		break;

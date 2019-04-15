@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     Rombel.belongsTo(models.User, {foreignKey: 'userId', targetKey:'userid'})
     Rombel.hasMany(models.Siswa, {foreignKey: 'kelasId', sourceKey: 'kodeRombel'})
     Rombel.hasMany(models.Jadwal, {foreignKey: 'rombelId', sourceKey: 'kodeRombel'})
+    Rombel.hasMany(models.Absen, {foreignKey: 'rombelId', sourceKey: 'kodeRombel'})
   };
   // Rombel.associate = function(models) {
   //   // Rombel.hasMany(models.Siswa, {foreignKey: 'kelasId', sourceKey: 'kodeRombel'})

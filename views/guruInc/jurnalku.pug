@@ -1,0 +1,85 @@
+.row 
+	.container-fluid
+		.col-xs-12
+			h2.text-center Jurnal Pribadi
+			hr
+			
+.row#dataAbsen
+	.container-fluid
+		.col-xs-12
+			.box
+				.box-header
+					h4 Jurnal Saya
+					.box-tools.pull-right
+						button.btn.btn-info.flat.text-white.btn-sm#btnAddJurnal(type="button" data-toggle='tooltip' title='Isi Jurnal')
+							i.fa.fa-pencil
+							| &nbsp; Isi Jurnal
+						button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							i.fa.fa-minus
+						button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							i.fa.fa-times
+				.box-body
+					.table-responsive
+						table.table.dataTable#tableJurnalku
+							thead
+								tr
+									th No
+									//- th Kode Absen
+									th Mulai
+									th Selesai
+									th Lokasi
+									th Kegiatan
+									th Uraian
+									th Opsi
+							tbody
+								unless data == null
+									each jurnal, index in data
+										tr
+											td #{index+1}
+											//- td #{absenku.kodeAbsen}
+											td #{jurnal.mulai}
+											td #{jurnal.selesai}
+											td #{jurnal.lokasi}
+											td #{jurnal.kegiatan}
+											td(style="word-wrap: break-word!important") #{(jurnal.uraian) ? jurnal.uraian.substr(0,60) : 'kosong'} [...]
+											td 
+												button.btn.btn-warning.btn-sm.btnEditJurnal(data-id=`${jurnal.id}` data-nama=`${jurnal.kegiatan}`)
+													i.fa.fa-pencil
+												| &nbsp;
+												button.btn.btn-danger.btn-sm.btnHapusJurnal(data-id=`${jurnal.id}` data-nama=`${jurnal.kegiatan}`)
+													i.fa.fa-trash
+
+.modal#modalFormJurnal(role="dialog")
+	.modal-dialog.modal-md
+		.modal-content
+			.modal-header.modal-md(style="")
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h4 Isi Jurnal Pribadi
+			.modal-body
+				.row
+					.col-sm-12
+						h4 Form
+						form.form#frmIsiJurnalGuru
+							input#id(type="hidden" name="id")
+							input#mode(type="hidden" name="mode" value='create')
+							.col-sm-4
+								.form-group
+									input.form-control.datetimepicker#mulai(type="text" name="mulai" placeholder="Mulai")
+							.col-sm-4
+								.form-group
+									input.form-control.datetimepicker#selesai(type="text" name="selesai" placeholder="Selesai")
+							.col-sm-6
+								.form-group
+									input.form-control#lokasi(name="lokasi" placeholder="Lokasi")
+							.col-sm-6
+								.form-group
+									input.form-control#kegiatan(name="kegiatan" placeholder="Kegiatan")
+							.col-sm-12
+								.form-group(style="position:relative; width:100%")
+									textarea.form-control#textJurnal(name="uraian")
+							.col-sm-12
+								.form-group
+									button.btn.btn-success#btnSaveJurnal(type="submit")
+										i.fa.fa-save
+										| &nbsp; Simpan

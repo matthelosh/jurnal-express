@@ -11,6 +11,8 @@ let SiswaController = require('./../controllers/SiswaController')
 let MapelController = require('./../controllers/MapelController')
 let JadwalController = require('./../controllers/JadwalController')
 let LogAbsenController = require('./../controllers/LogAbsenController')
+let AbsenController = require('./../controllers/AbsenController')
+let JurnalGuruController = require('./../controllers/JurnalGuruController')
 
 // Users ROute
 router.get('/getSelectUsers', Auth.isLoggedIn, UserController.getAll4Select)
@@ -60,5 +62,21 @@ router.put('/update-jadwal', Auth.isLoggedIn, JadwalController.updateOne)
 router.post('/activate-jadwal', Auth.isLoggedIn, LogAbsenController.activate)
 router.put('/ijinkan-guru', Auth.isLoggedIn, LogAbsenController.ijinkanGuru)
 router.put('/tutup-jadwal', Auth.isLoggedIn, LogAbsenController.tutupJadwal)
+
+// Guru ROuter
+router.get('/guru/get-siswa-rombel', Auth.isLoggedIn, SiswaController.getByRombel)
+
+// Guru Absen Router
+router.post('/guru/do-absen', Auth.isLoggedIn, AbsenController.doAbsen)
+router.get('/guru/detil-absenku', Auth.isLoggedIn, AbsenController.getDetilAbsen)
+router.put('/ubah-absen', Auth.isLoggedIn, AbsenController.ubahAbsen)
+
+// Wali Kelas
+router.get('/rekap-wali', Auth.isLoggedIn, AbsenController.getRekapWali)
+
+// Jurnal guru
+router.post('/tulis-jurnal-guru', Auth.isLoggedIn, JurnalGuruController.createOne)
+router.delete('/hapus-jurnal', Auth.isLoggedIn, JurnalGuruController.deleteOne)
+router.get('/get-jurnal/:id', Auth.isLoggedIn, JurnalGuruController.getOne)
 
 module.exports = router

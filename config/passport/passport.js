@@ -14,7 +14,16 @@ module.exports = (passport, user) => {
 	passport.deserializeUser((id, done) => {
 		User.findByPk(id).then(user => {
 			if (user) {
-				done(null, user.get())
+				var Rombel = models.Rombel
+				Rombel.findOne({where:{userId:user.userid}})
+					.then(rombel => {
+						if (rombel) {
+							user.wali ='benar'
+							user.rombel = rombel.kodeRombel
+						}
+						done(null, user)
+					})
+				
 			} else {
 				done(user.errors,null)
 			}

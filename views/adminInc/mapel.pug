@@ -1,0 +1,106 @@
+.box
+	.box-header
+		h3.box-title
+			i.fa.fa-users &nbsp;
+			span.hidden-xs Manajemen Mapel
+		.box-tools.pull-right
+			button.btn.btn-box-tool#btnImport(data-toggle='modal' title='Impor Mapel dari Excel' )
+				i.fa.fa-file-excel-o.fa-2x
+			button.btn.btn-box-tool#btnAddMapel(type="button" data-toggle='modal' title='Tambah Mapel' data-target="#modalFormMapel")
+				i.fa.fa-list.fa-2x
+			button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+				i.fa.fa-minus
+			button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+				i.fa.fa-times
+	.box-body
+		.table-responsive
+			table.table.table-bordered.table-condensed.dataTable#tableMapels(data-judul="Data Mapel")
+				caption Data Mapel
+				thead
+					tr
+						th No
+						th Kode Mapel
+						//- th Password
+						th Nama Mapel
+						//- th No HP
+						//- th Kelas
+						//- th Level
+						th Opsi
+				tbody#tbodyMapels
+					each mapel, index in data
+						tr
+							td #{index+1}
+							td #{mapel.kodeMapel}
+							//- td #{user.password}
+							td #{mapel.namaMapel}
+							//- td #{siswa.hp}
+							//- td 
+								if (siswa.Rombel != null)
+									| #{siswa.Rombel.namaRombel}
+								else
+									| Belum terdaftar di kelas
+
+							//- td #{user.level}
+							td 
+								button.btn.btn-sm.btn-warning.flat.btnEditMapel(
+									data-id=mapel.id
+									data-nama=mapel.namaMapel)
+									i.fa.fa-pencil
+								button.btn.btn-sm.btn-danger.flat.btnDelMapel(
+									data-id=mapel.id
+									data-nama=mapel.namaMapel)
+									i.fa.fa-trash
+	.box-footer
+		| Footer
+
+.modal#modalFormMapel
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 
+					span#modForm Tambah 
+					| Mapel
+			.modal-body
+					form.form#frmAddMapel(method="post" action="")
+						input#id(type="hidden" name="id" value="")
+						input#mod(type="hidden" name="mod" value="create")
+						.form-group
+							label Kode Mapel
+							input.form-control#kodeMapel(name="kodeMapel" placeholder="Kode Mapel" required)
+						.form-group
+							label Nama Mapel
+							input.form-control#namaMapel(name="namaMapel" placeholder="Nama Mapel" required)
+						//- .form-group
+						//- 	label No. HP
+						//- 	input.form-control#hp(name="hp" placeholder="No. HP" required)
+						//- .form-group
+						//- 	label Kelas / Rombel
+						//- 	select.form-control#selectRombel(name="rombel" placeholder="Kelas / Rombel" style="width:100%" )
+						.form-group
+							.container
+								.btn-group.center-block
+									button.btn.flat.btn-primary#btnCreateMapel
+										i.fa.fa-save
+										| &nbsp; Simpan
+									button.btn.flat.btn-warning#resetForm(type="reset")
+										i.fa.fa-save
+										| &nbsp; Reset
+
+.modal#modalImport
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Impor Siswa
+			.modal-body
+					form.form#frmImportSiswa(method="post" action="" enctype="multipart/form-data")
+						.form-group
+							label File Excel
+							input.form-control#file(name="file" type="file" placeholder="File" required)
+						.form-group
+							button.btn.flat.btn-success.center-block#btnImportNow(data-content="mapels")
+								i.fa.fa-save
+								| &nbsp; Import

@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.Rombel,{foreignKey:'userId', sourceKey: 'userid'})
     User.hasMany(models.Jadwal,{foreignKey:'guruId', sourceKey: 'userid'})
     User.hasMany(models.Izin, {foreignKey:'guruId', sourceKey: 'userid'})
+    User.hasMany(models.Absen, {foreignKey:'guruId', sourceKey: 'userid'})
+    User.hasMany(models.JurnalGuru, {foreignKey:'guruId', sourceKey: 'userid'})
   };
 
   User.cek = (userId) => {

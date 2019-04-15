@@ -1,0 +1,33 @@
+.row
+	.container-fluid
+		.col-xs-12
+			h2.text-center Jadwal Mengajar
+			hr
+			
+.row#dataAbsen
+	.container-fluid
+		.col-xs-12
+			.box
+				.box-header
+					h4 Jadwal Saya
+				.box-body
+					.table-responsive
+						table.table.dataTable#tableJadwalku
+							thead
+								tr
+									th No
+									//- th Kode Absen
+									th Hari
+									th Kelas
+									th Mapel
+									th Jamke
+							tbody
+								unless data == null
+									each jadwal, index in data
+										tr
+											td #{index+1}
+											//- td #{absenku.kodeAbsen}
+											td #{jadwal.hari}
+											td #{jadwal.Rombel.namaRombel}
+											td #{jadwal.Mapel.namaMapel}
+											td #{jadwal.jamke}

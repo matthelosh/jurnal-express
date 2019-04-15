@@ -1,0 +1,82 @@
+.row
+	.container-fluid
+		.col-xs-12
+			h2.text-center Anda memiliki Jadwal yang telah diabsen
+			hr
+			
+.row#dataAbsen
+	.container-fluid
+		.col-xs-12
+			.box
+				.box-header
+					h4 Catatan Absensi Saya
+				.box-body
+					.table-responsive
+						table.table.dataTable#tableAbsenkus
+							thead
+								tr
+									th No
+									//- th Kode Absen
+									th Tanggal
+									th Kelas
+									th Mapel
+									th Jml Siswa
+									th H
+									th I
+									th S
+									th A
+									th T
+									th Opsi
+							tbody
+								unless data == null
+									each absenku, index in data
+										tr
+											td #{index+1}
+											//- td #{absenku.kodeAbsen}
+											td #{absenku.tanggal}
+											td #{absenku.Rombel.namaRombel}
+											td #{absenku.Mapel.namaMapel}
+											td #{absenku.jmlSiswa} org
+											td #{absenku.h}
+											td #{absenku.i}
+											td #{absenku.s}
+											td #{absenku.a}
+											td #{absenku.t}
+											td
+												button.btn.btn-sm.btn-info.btnDetilAbsenku(data-id=`${absenku.kodeAbsen}`)
+													i.fa.fa-search
+													| &nbsp; Detil
+			
+
+.row#editAbsen(style="display:none")
+	.container-fluid
+		.col-xs-12.col-sm-8
+			.box
+				.box-header
+					h4 Kode Absen: 
+						span#idAbsen
+				.box-body
+					.table-responsive
+						table.table.table-bordered.table-condensed#tableEditAbsen
+							thead
+								tr
+									th No
+									th NIS
+									th Nama
+									th ket
+									th Opsi
+							tbody#tbodyDoAbsen
+		.col-xs-12.col-sm-4
+			.box
+				.box-header
+					h4 Keterangan
+				.box-body
+
+			.box
+				.box-header
+					h4 Jurnal Pembelajaran
+				.box-body
+					p Jurnal
+
+
+//- #

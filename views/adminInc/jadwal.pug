@@ -1,0 +1,133 @@
+.box
+	.box-header
+		h3.box-title
+			i.fa.fa-calendar-o &nbsp;
+			span.hidden-xs Manajemen Jadwal
+		.box-tools.pull-right
+			button.btn.btn-box-tool#btnImport(data-toggle='modal' title='Impor Jadwal dari Excel' )
+				i.fa.fa-file-excel-o.fa-2x
+			button.btn.btn-box-tool#btnAddJadwal(type="button" data-toggle='modal' title='Tambah Jadwal' data-target="#modalFormJadwal")
+				i.fa.fa-calendar.fa-2x
+			button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+				i.fa.fa-minus
+			button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+				i.fa.fa-times
+	.box-body
+		.table-responsive
+			table.table.table-bordered.table-condensed.dataTable#tableJadwals(data-judul="Data Jadwal")
+				caption Data Jadwal
+				thead
+					tr
+						th No
+						th Hari
+						th Guru
+						th Mapel
+						th Kelas
+						th Jam Ke
+						//- th Level
+						th Opsi
+				tbody#tbodyJadwals
+					each jadwal, index in data
+						tr
+							td #{index+1}
+							td #{jadwal.hari}
+							td 
+								if (jadwal.User) 
+									| #{jadwal.User.fullname}
+								else 
+									| Belum ada Guru
+							td 
+								if (jadwal.Mapel) 
+									| #{jadwal.Mapel.namaMapel}
+								else 
+									| Belum ada jadwal
+							td 
+								if (jadwal.Rombel)
+									| #{jadwal.Rombel.namaRombel}
+								else 
+									| Belum ada Rombel
+							td #{jadwal.jamke}
+							td 
+								button.btn.btn-sm.btn-warning.flat.btnEditJadwal(
+									data-id=jadwal.id 
+									data-nama=jadwal.kodeJadwal)
+									i.fa.fa-pencil
+								button.btn.btn-sm.btn-danger.flat.btnDelJadwal(
+									data-id=jadwal.id
+									data-nama=jadwal.kodeJadwal)
+									i.fa.fa-trash
+	.box-footer
+		| Footer
+
+.modal#modalFormJadwal
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 
+					span#modForm Tambah 
+					| Jadwal
+			.modal-body
+				.container-fluid
+					form.form#frmJadwal(method="post" action="")
+						input#id(type="hidden" name="id" value="")
+						input#mod(type="hidden" name="mod" value="create")
+						.row
+							.form-group
+								label Hari
+								select.form-control#selectHari(name="hari" placeholder="Hari" required, style="width:100%")
+									option(value="") Pilih Hari
+						.row
+							.form-group
+								label Guru
+								select.form-control#selectWali(name="guruId" placeholder="Guru" required, style="width:100%")
+									option(value="") Pilih Guru
+						.row
+							.form-group
+								label Mapel
+								select.form-control#selectMapel(name="mapelId" placeholder="Mapel" required, style="width:100%")
+									option(value="") Pilih Mapel
+						.row
+							.form-group
+								label Kelas
+								select.form-control#selectRombel(name="rombelId" placeholder="Kelas / Rombel" required, style="width:100%")
+									option(value="") Pilih Kelas / Rombel
+						.row
+							.form-group
+								label.col-sm-4 Mulai Jam ke
+									select.form-control.selectJamke#selectJamkeAwal(name="jamKeAwal" placeholder="Jam Mulai" required, style="width:100%")
+										option(value="") 0
+								.col-sm-1
+									p s/d
+								label.col-sm-4 Selesai Jam Ke
+									select.form-control.selectJamke#selectJamkeAkhir(name="jamKeAkhir" placeholder="Jam Selesai" required, style="width:100%")
+										option(value="") 0
+							
+						.row
+							.form-group
+								.container
+									.btn-group.center-block
+										button.btn.flat.btn-primary#btnCreateJadwal
+											i.fa.fa-save
+											| &nbsp; Simpan
+										button.btn.flat.btn-warning#resetForm(type="reset")
+											i.fa.fa-save
+											| &nbsp; Reset
+
+.modal#modalImport
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h3 Impor Jadwal
+			.modal-body
+					form.form#frmImportJadwal(method="post" action="" enctype="multipart/form-data")
+						.form-group
+							label File Excel
+							input.form-control#file(name="file" type="file" placeholder="File" required)
+						.form-group
+							button.btn.flat.btn-success.center-block#btnImportNow(data-content="jadwals")
+								i.fa.fa-save
+								| &nbsp; Import

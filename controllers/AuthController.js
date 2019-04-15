@@ -18,23 +18,19 @@ exports.dashboard = (req,res) => {
 	}
 }
 exports.dashWithProfile = (req, res) => {
+	var cookies = req.cookies
 	if(req.params.userid != req.user.userid && req.user.level !='1') {
 		res.redirect('/dashboard/profile/'+req.user.userid)
 	}
-	var User = models.User
-	User.findOne({
-		where:{
-			userid: req.params.userid
-		}
-	}).then((user)=>{
-		// console.log(req.app.locals.siteTitle)
+	
+		var me = req.user
 		var siteTitle = process.env.APP_NAME
-		res.render('blankpage', {title: siteTitle+' | Dashboard', user:user, subtitle:'Bekerja dengan tulus. :)', meta:{}})
-	})
-	// res.json(models.user)
+		res.render('blankpage', {title: siteTitle+' | Dashboard', user:me, subtitle:'Bekerja dengan tulus. :)', meta:{}})
 }
 exports.logout = (req, res) => {
-	req.session.destroy(err => {
-		res.redirect('/')
-	})
+	// req.session.destroy(err => {
+	// 	res.redirect('/')
+	// })
+	req.logout()
+	res.redirect('/')
 }

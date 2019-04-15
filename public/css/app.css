@@ -11,6 +11,34 @@ button:hover{
 	cursor: pointer!important;
 }
 
+button.btn.btn-success{
+	background-image: url('/img/bg-btn.png');
+	border: 0!important;
+}
+button.btn.btn-danger{
+	background-image: url('/img/bg-btn-danger.png');
+	border: 0!important;
+}
+button.btn.btn-info{
+	background-image: url('/img/bg-btn-info.png');
+	border: 0!important;
+}
+button.btn.btn-warning{
+	background-image: url('/img/bg-btn-warning.png');
+	border: 0!important;
+}
+button.btn.btn-primary{
+	background-image: url('/img/bg-btn-primary.png');
+	border: 0!important;
+}
+/*Paginatioan buttons datatable*/
+li.paginate_button{
+	padding: 0!important;
+	border: none!important;
+	margin:0!important;
+}
+
+
 /*.no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .se-pre-con {
@@ -22,10 +50,71 @@ button:hover{
 	z-index: 9999;
 	background: url('/img/loader.gif') center no-repeat rgba(255,255,255,0.1);
 }*/
+/*th,td { white-space: nowrap; }*/
+
+/*Modal Custom*/
+.modal-content,.modal-header{
+	border-radius: 5px;
+}
+.modal-header{
+	background: url('/img/modal-header.png');
+	background-size: 100%;
+	background-repeat:no-repeat;
+	border-bottom-left-radius: 0!important;
+	border-bottom-right-radius: 0!important;
+	text-align:center;
+	text-transform: uppercase;
+	text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+	color: #f4f4f4;
+	
+}
+
+div.DTFC_LeftHeadWrapper > table{
+	margin-bottom:0!important;
+}
+div.DTFC_LeftBodyWrapper > div > table,
+div.DTFC_RightBodyWrapper > div > table{
+	margin-top:0!important;
+	/*background: pink!important;*/
+}
+div.DTFC_LeftBodyWrapper{
+	-webkit-box-shadow: 9px 0px 10px -10px rgba(0,0,0,0.75);
+	-moz-box-shadow: 9px 0px 10px -10px rgba(0,0,0,0.75);
+	box-shadow: 9px 0px 10px -10px rgba(0,0,0,0.75);
+}
+div.DTFC_RightBodyWrapper{
+	-webkit-box-shadow: -9px 0px 10px -10px rgba(0,0,0,0.75);
+	-moz-box-shadow: -9px 0px 10px -10px rgba(0,0,0,0.75);
+	box-shadow: -9px 0px 10px -10px rgba(0,0,0,0.75);
+}
+div.DTFC_RightBodyWrapper > div > table tr:nth-child(odd) td,
+div.DTFC_LeftBodyWrapper > div > table tr:nth-child(odd) td {
+	background: #e7f3eb!important;
+}
+div.DTFC_RightBodyWrapper > div > table tr:nth-child(even) td,
+div.DTFC_LeftBodyWrapper > div > table tr:nth-child(even) td {
+	background: #d7e6da!important;
+}
 .main-header{
-	background: green;
+	background: pink;
 	box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 	border-bottom: 1px solid #efefef;
+}
+.main-header .logo{
+	/*background-image: url('/img/nav-bg-brand.png');*/
+	background-size: auto 100%;
+	background-position: right;
+}
+.main-header .navbar{
+	background-position: center;
+}
+.main-header .logo,
+.main-header .navbar{
+	background-image: url('/img/nav-bg.png');
+	/*background-size: 100% auto;*/
+}
+.main-header .navbar .sidebar-toggle:hover{
+	background: rgba(200,200,225,0.6)!important;
 }
 .wrapper{
 	height: 100vh!important;
@@ -52,7 +141,7 @@ button:hover{
 }
 .box{
 	padding: 10px!important;
-	border-radius: 2px;
+	border-radius: 5px;
 	border-top: 0;
 	border: 1px solid #aaa!important;
 	box-shadow: 2px 3px 7px rgba(150,150,150,0.6)!important;

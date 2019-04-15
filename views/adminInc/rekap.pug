@@ -1,0 +1,94 @@
+.container-fluid
+	.row
+		.box-content
+			.col-xs-12.col-md-4
+				.box.boxRekap
+					.box-header
+						h3.box-title
+							i.fa.fa-list-alt &nbsp;
+							span.hidden-xs Rekap Harian
+						.box-tools.pull-right
+							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+								i.fa.fa-minus
+							button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+								i.fa.fa-times
+					.box-body
+						form.form.formRekapHari
+							.form-group.col-xs-12
+								//- label Pilih Kelas / Rombel
+								select.form-control#selectRombel(style="width:100%")
+							.form-group.col-xs-12
+								button.btn.btn-primary.flat.btnLihat(style="width:100%" data-lihat="rekapHari")
+									i.fa.fa-search
+									| &nbsp; Lihat
+			.col-xs-12.col-md-4
+				.box.boxRekap
+					.box-header
+						h3.box-title
+							i.fa.fa-list-alt &nbsp;
+							span.hidden-xs Rekap Bulanan
+						.box-tools.pull-right
+							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+								i.fa.fa-minus
+							button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+								i.fa.fa-times
+					.box-body
+						form.form.formRekapBulan
+							.form-group.col-xs-12
+								//- label Pilih Kelas / Rombel
+								select.form-control#selectRombel(style="width:100%")
+							.form-group.col-sm-6.col-xs-12
+								//- label Pilih Bulan
+								select.form-control.selectBulan#selectBulan(style="width:100%")
+							.form-group.col-sm-6.col-xs-12
+								//- label Pilih Tahun
+								select.form-control.selectTahun#selectTahun(style="width:100%")
+							.form-group.col-xs-12
+								button.btn.btn-primary.flat.btnLihat(style="width:100%" data-lihat="rekapBulan")
+									i.fa.fa-search
+									| &nbsp; Lihat
+			.col-xs-12.col-md-4
+				.box.boxRekap
+					.box-header
+						h3.box-title
+							i.fa.fa-list-alt &nbsp;
+							span.hidden-xs Rekap Guru
+						.box-tools.pull-right
+							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+								i.fa.fa-minus
+							button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+								i.fa.fa-times
+					.box-body
+						form.form.formRekapBulan
+							.form-group.col-xs-12
+								//- label Pilih Kelas / Rombel
+								select.form-control#selectRombel(style="width:100%")
+							.form-group.col-sm-6.col-xs-12
+								//- label Pilih Bulan
+								select.form-control.selectBulan#selectBulan(style="width:100%")
+							.form-group.col-sm-6.col-xs-12
+								//- label Pilih Tahun
+								select.form-control.selectTahun#selectTahun(style="width:100%")
+							.form-group.col-xs-12
+								//- label Pilih Guru
+								select.form-control.selectWali#selectWali(style="width:100%")
+							.form-group.col-xs-12
+								button.btn.btn-primary.flat.btnLihat(style="width:100%" data-lihat="rekapGuru")
+									i.fa.fa-search
+									| &nbsp; Lihat
+	.row
+		.box#boxDetail(style="display:none")
+			.box-header
+				h3.box-title
+					i.fa-fa-info
+					span.hidden-xs Detail
+				.box-tools.pull-right
+					button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+						i.fa.fa-minus
+					button.btnHideMe(type='button', data-toggle='tooltip',title='Tutup').btn.btn-box-tool
+						i.fa.fa-times
+			.box-body
+				p Detail Info
+			.box-footer
+				p footer
+
