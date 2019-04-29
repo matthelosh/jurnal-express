@@ -66,8 +66,13 @@ exports.menu = (req,res) => {
 				include: [models.User, models.Rombel, models.Mapel],
 				order: ['rombelId']
 			}).then(logabsens => {
+				if (req.query.bel) {
+					let bel = req.query.bel
+					let audio = (bel == '1') ? '/audio/noerhalimah-nasibBunga.mp3' : null
+					res.render('blankpage', { title: 'Monitor Pembelajaran' + ' | ' + process.env.APP_NAME, user: me, status: 'ok', p: req.params.menu, data: logabsens, audio:audio })
+				}
 				res.render('blankpage', { title: 'Monitor Pembelajaran'+ ' | '+process.env.APP_NAME, user:me, status: 'ok', p: req.params.menu, data:logabsens })
-				console.log(tanggalHariIni,logabsens)
+				// console.log(tanggalHariIni,logabsens)
 			}).catch(err=>{
 				console.log(err)
 			})
@@ -86,6 +91,10 @@ exports.menu = (req,res) => {
 			}
 			getData()
 			
+		break
+
+		case "beranda":
+			res.render('blankpage', { title: req.params.menu + process.env.APP_NAME, user: me, status: 'ok', p: req.params.menu, data: 'Beranda' })
 		break
 
 		default:

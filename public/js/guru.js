@@ -79,13 +79,22 @@ $(document).ready(function(){
 		$.ajax({
 			type:'post',
 			url: '/xhr/guru/do-absen',
+			beforeSend: function(){
+				$('#modalLoader').modal()
+			},
+			complete: function(){
+				$('#ModalLoader').modal('hide')
+			},
 			data: data,
 			dataType:'json',
 			success: function(res){
 				if(res.status == 'sukses'){
 					// $('#dataJadwal').slideDown()
 					// $('#doAbsenBox').slideToggle()
+					// window.location.reload()
+					alert('Absen sudah diproses. Terima kasih. :)')
 					window.location.reload()
+					console.log(res)
 				} else {
 					console.log(res)
 				}
@@ -94,6 +103,13 @@ $(document).ready(function(){
 	})
 
 	// edit absen
+	// $(document).on('click', 'btn-box-tool')
+	$(document).on('click', '.btn-box-tool', function(e) {
+		e.preventDefault()
+		// alert('hi')
+		$('#dataJadwal').slideDown()
+		$(this).parents('.row').slideUp()
+	})
 	$(document).on('click', '.btnDetilAbsenku', function(){
 		var kodeAbsen = $(this).data('id')
 		// alert(kodeAbsen)
@@ -106,12 +122,15 @@ $(document).ready(function(){
 				$('#modalLoader').modal()
 			},
 			success: function(res) {
-				// console.log(res)
+				console.log(res.data.length)
 				$('#idAbsen').text(kodeAbsen)
 				var datas = res.data
 				$('#dataAbsen').slideUp()
 				$('#editAbsen').slideDown()
 				writeTableAbsenku(datas, '#tableEditAbsen')
+				getKet(datas)
+				$('#ket').html('Keterangan')
+				$('#jurnal').html(datas[0].jurnal)
 			},
 			complete: function(){
 				$('#modalLoader').modal('hide')
@@ -123,6 +142,26 @@ $(document).ready(function(){
 	})
 
 	// Fungsi edit absen
+	async function getKet(datas){
+		jmlSiswa = datas.length
+		jmlH = 0
+		jmlI = 0
+		jmlS = 0
+		jmlA = 0
+		jmlT = 0
+		await datas.forEach(item => {
+			(item.ket == 'h') ? jmlH++ : (item.ket == 'i') ? jmlI++ : (item.ket == 's') ? jmlI++ : (item.ket == 'a') ? jmlA++ : jmlT++
+		})
+
+		$('#ket').html(`
+			<p>Jml Siswa: ${jmlSiswa}</p>
+			<p>Hadir: ${jmlH}</p>
+			<p>Izin: ${jmlI}</p>
+			<p>Sakit: ${jmlS}</p>
+			<p>Alpa: ${jmlA}</p>
+			<p>Telat: ${jmlT}</p>
+		`)
+	}
 	async function writeTableAbsenku(datas, tableId) {
 		var rows
 		await datas.forEach((item, index) => {
@@ -337,13 +376,13 @@ $(document).ready(function(){
 	$(document).on('submit', '#frmIsiJurnalGuru', function(e) {
 		e.preventDefault()
 		var data = $(this).serialize()
-		var url = ($(this).children('#mode').val() == 'create') ? 'tulis-jurnal-guru' : 'update-jurnal-guru'
+		var url = ($(this).children('#mode').val() == 'create') ? '/xhr/tulis-jurnal-guru' : '/xhr/update-jurnal-guru'
 		var mode = ($(this).children('#mode').val() == 'create') ? 'post' : 'put'
 
 		
 		$.ajax({
 			url: url,
-			type: type,
+			type: mode,
 			data: data,
 			beforeSend: function(){
 				$('#modalLoader').modal()
@@ -391,6 +430,8 @@ $(document).ready(function(){
 				if (res.status == 'gagal') alert(res.msg)
 				var datas = res.data
 				rewriteTableJurnalKu(datas, '#tableJurnalku')
+				if ($('.modal.in').length) $('.modal').modal('hide')
+				
 			}
 		})
 	})
@@ -398,7 +439,6 @@ $(document).ready(function(){
 	$(document).on('click', '.btnEditJurnal', function(){
 		var id = $(this).data('id')
 		var nama = $(this).data('nama')
-		alert(id)
 
 		$.ajax({
 			url: '/xhr/get-jurnal/'+id,
@@ -427,6 +467,48 @@ $(document).ready(function(){
 		})
 
 	})
+
+	$(document).on('click', '.btnDetilJurnal', function () {
+		var id = $(this).data('id')
+		var nama = $(this).data('nama')
+
+		$.ajax({
+			url: '/xhr/get-jurnal/' + id,
+			type: 'get',
+			dataType: 'json',
+			beforeSend: function () {
+				$('#modalLoader').modal()
+			},
+			complete: function () {
+				$('#modalLoader').modal('hide')
+			},
+			success: function (res) {
+				if (res.status == 'gagal') alert(res.msg)
+
+				var jurnal = res.data
+				$('#modalDetilJurnal .modal-header h4').html('Detil Jurnal '+ jurnal.kegiatan)
+				var isi = `
+					<div>
+						<p>Mulai: ${jurnal.mulai}</p>
+						<p>Selesai: ${jurnal.selesai}</p>
+						<p>Lokasi Kegiatan: ${jurnal.lokasi}</p>
+						<p>Uraian: ${jurnal.uraian}
+					</div>
+				`
+				var footer = `
+					<button class="btn btn-warning btnEditJurnal" data-id="${jurnal.id}"><i class="fa fa-pencil"></i> Edit</button>
+					<button class="btn btn-danger btnHapusJurnal" data-id="${jurnal.id}"><i class="fa fa-trash"></i> Hapus</button>
+					&nbsp; &nbsp;
+					<button class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close"></i> Tutup</button>
+				`
+				$('#modalDetilJurnal .modal-body').html(isi)
+				$('#modalDetilJurnal .modal-footer').html(footer)
+				$('#modalDetilJurnal').modal()
+			}
+		})
+
+	})
+
 	// FUngsi Jurnal Guru
 	async function rewriteTableJurnalKu(datas, tableId) 
 			{
@@ -439,8 +521,7 @@ $(document).ready(function(){
 								<td>${jurnal.selesai}</td>
 								<td>${jurnal.lokasi}</td>
 								<td>${jurnal.kegiatan}</td>
-								<td>`+ jurnal.uraian.substr(0,60) +`[...]</td>
-								<td><button class="btn btn-warning btnEditJurnal" data-id="${jurnal.id}" data-nama="${jurnal.kegiatan}"><i class="fa fa-pencil"></i></button> &nbsp; <button class="btn btn-danger btnHapusJurnal" data-id="${jurnal.id}" data-nama="${jurnal.kegiatan}"><i class="fa fa-trash"></i></button></td>
+								<td><button class="btn btn-sm btn-info btnDetilJurnal" title="Lihat Detil" data-id="${jurnal.id}" data-nama="${jurnal.kegiatan}"><i class="fa fa-search"></i></button> <button class="btn btn-warning btnEditJurnal" data-id="${jurnal.id}" data-nama="${jurnal.kegiatan}"><i class="fa fa-pencil"></i></button> &nbsp; <button class="btn btn-danger btnHapusJurnal" data-id="${jurnal.id}" data-nama="${jurnal.kegiatan}"><i class="fa fa-trash"></i></button></td>
 							</tr>	
 							`
 					$(tableId).DataTable().destroy()
@@ -449,4 +530,198 @@ $(document).ready(function(){
 				})
 			}
 
+	// Profil Guru
+	$(document).on('click', '#uploadFoto', function(){
+		$('#userFotoInput').trigger('click')
+	})
+	
+	$(document).on('click', '#uploadLatar', function(){
+		$('#userLatarInput').trigger('click')
+	})
+
+	
+
+	
+	$(document).on('change', '#userFotoInput', function(e) {
+		
+		uploadGambarProfil(e, '#userFotoInput')
+	})
+	
+	$(document).on('change', '#userLatarInput', function(e) {
+		
+		uploadGambarProfil(e, '#userLatarInput')
+	})
+
+	function uploadGambarProfil(e, idFile) {
+		var file = e.target.files[0]
+		var f = file.name.split('.')
+		var type = f[1]
+		console.log(type)
+		if (type != 'jpg') {
+			alert('Upload file gambar.' + type)
+			$('#userFotoInput').val('')
+			return false
+		} else {
+			var field = (idFile == '#userFotoInput') ? 'userFoto' : 'fotoLatar'
+			var Reader = new FileReader()
+			Reader.onload = function (i) {
+				
+				$('.'+field).css({
+					'background-image': 'url(' + i.target.result + ')'
+				})
+			}
+
+			Reader.readAsDataURL(file)
+
+			
+			var url = (idFile == '#userFotoInput') ? '/xhr/profil' : '/xhr/foto-latar'
+
+			var fd = new FormData()
+			fd.append('tes', 'Tes Saja')
+			fd.append(field, file)
+			// console.log(file, fd)
+
+			$.ajax({
+				type: 'post',
+				url: url,
+				data: fd,
+				contentType: false,
+				processData: false,
+				beforeSend: function () {
+					// console.log(fd)
+				},
+				success: function (res) {
+					console.log(res)
+				}
+			})
+		}
+	}
+
+	$(document).on('dblclick', '.userHP', function() {
+		// alert('Edit HP')
+		$(this).hide()
+		$('#inputHP').show().focus()
+		// $('#inputHP input').focus()
+	})
+	
+
+	$('#inputHP').keyup(function(e) {
+		var key = e.which
+		var id = $(this).data('id')
+		if ( key =='13') {
+			var value = $(this).val()
+			// alert(id)
+			updatePart(id, 'hp', value)
+		}
+	})
+
+	$(document).on('focusout', '#inputHP', function () {
+		$('#inputHP').hide()
+		$('.userHP').show()
+	})
+
+	$(document).on('dblclick', '.userPwd', function () {
+		// alert('Edit HP')
+		$(this).hide()
+		$('#inputPwd').show().focus()
+		// $('#inputHP input').focus()
+	})
+
+	$('#inputPwd').keyup(function (e) {
+		var key = e.which
+		var id = $(this).data('id')
+		if (key == '13') {
+			var value = $(this).val()
+			
+			// alert(value)
+			updatePart(id, 'password', value, $(this))
+		}
+	})
+
+	$(document).on('focusout', '#inputPwd', function(){
+		$('#inputPwd').hide()
+		$('.userPwd').show()
+	})
+
+	$(document).on('dblclick', '.userFullname', function () {
+		// alert('Edit HP')
+		$(this).hide()
+		$('#inputFullname').show().focus()
+		// $('#inputHP input').focus()
+	})
+
+	$('#inputFullname').keyup(function (e) {
+		var key = e.which
+		var id = $(this).data('id')
+		if (key == '13') {
+			var value = $(this).val()
+			updatePart(id, 'fullname', value, $(this))
+		}
+	})
+
+	$(document).on('focusout', '#inputFullname', function () {
+		$('#inputFullname').hide()
+		$('.userFullname').show()
+	})
+
+	function updatePart(id, field, value, ini) {
+		$.ajax({
+			type: 'put',
+			url: '/xhr/edit-part-user',
+			data: {id: id, field: field, value: value},
+			success: function(res) {
+				if (res.status == 'gagal') {alert(res.msg); return false }
+				// console.log(ini)
+				ini.trigger('focusout')
+				if(field == 'password') {res.msg = '<a href=/logout>Password sudah diubah. Login ulang untuk memastikan. :)</a>'}
+				ini.siblings('span').html(`${res.msg}`)
+
+			}
+		})
+	}
+
+	// ChartJS
+	var url = window.location.href
+	// alert(url)
+	if (url == window.location.origin +'/dashboard/staf/beranda') {
+		// alert(url)
+		var ctx = document.getElementById('stafChart').getContext('2d')
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+				datasets: [{
+					label: '# of Votes',
+					data: [12, 19, 3, 5, 2, 3],
+					backgroundColor: [
+						'rgba(255, 99, 132, 0.2)',
+						'rgba(54, 162, 235, 0.2)',
+						'rgba(255, 206, 86, 0.2)',
+						'rgba(75, 192, 192, 0.2)',
+						'rgba(153, 102, 255, 0.2)',
+						'rgba(255, 159, 64, 0.2)'
+					],
+					borderColor: [
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			}
+		})
+
+	}
 })

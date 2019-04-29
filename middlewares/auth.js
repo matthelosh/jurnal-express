@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken')
+const secret = require('./../config/settings').jwtSecret
 
 module.exports = {
 	isAuth: (req, res, next) => {
 		try {
 			const token = req.headers.token
-			var decoded = jwt.verify(token, process.env.SECRET)
+			var decoded = jwt.verify(token, secret)
 			req.user = decoded
 			next()
 		} catch(err) {

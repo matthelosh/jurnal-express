@@ -1,8 +1,11 @@
 const express = require('express')
 const router = express.Router()
+var fs = require('fs')
+var multer = require('multer')
 let middle = require('./../middlewares/webMiddlewares')
+
 let Auth = require('./../middlewares/auth.js')
-let User = require('./../models/user.js')
+let models = require('./../models')
 let authController = require('./../controllers/AuthController')
 let AdminController = require('./../controllers/contentAdminController')
 let UserController = require('./../controllers/UserController')
@@ -14,13 +17,26 @@ let LogAbsenController = require('./../controllers/LogAbsenController')
 let AbsenController = require('./../controllers/AbsenController')
 let JurnalGuruController = require('./../controllers/JurnalGuruController')
 
+const storage = multer.diskStorage({ // notice you are calling the multer.diskStorage() method here, not multer()
+    destination: function (req, file, cb) {
+        cb(null, './public/img/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+const upload = multer({ storage });
+// var type = upload.single('userFoto')
 // Users ROute
 router.get('/getSelectUsers', Auth.isLoggedIn, UserController.getAll4Select)
 router.post('/create-user', Auth.isLoggedIn, UserController.createOne)
 router.post('/import-users', Auth.isLoggedIn, UserController.importMany)
 router.delete('/deleteOne', Auth.isLoggedIn, UserController.deleteOne)
-router.get('/getOne/:id', Auth.isLoggedIn, UserController.getOne)
-router.put('/update-user', Auth.isLoggedIn, UserController.updateOne) 
+router.get('/getOne/:id', Auth.isLoggedIn,Auth.isAuth, UserController.getOne)
+router.put('/update-user', Auth.isLoggedIn, UserController.updateOne)
+router.put('/edit-part-user', Auth.isLoggedIn, UserController.updatePart)
+router.post('/foto-latar', Auth.isLoggedIn, upload.single('fotoLatar'), UserController.postFotoLatar)
+router.post('/profil', Auth.isLoggedIn, upload.single('userFoto'), UserController.postFotoProfil)
 
 // Rombels Route
 router.get('/get-select-rombels', Auth.isLoggedIn, RombelController.getAll4Select)
@@ -76,7 +92,21 @@ router.get('/rekap-wali', Auth.isLoggedIn, AbsenController.getRekapWali)
 
 // Jurnal guru
 router.post('/tulis-jurnal-guru', Auth.isLoggedIn, JurnalGuruController.createOne)
+router.put('/update-jurnal-guru', Auth.isLoggedIn, JurnalGuruController.updateOne)
 router.delete('/hapus-jurnal', Auth.isLoggedIn, JurnalGuruController.deleteOne)
 router.get('/get-jurnal/:id', Auth.isLoggedIn, JurnalGuruController.getOne)
 
+// Jampel
+router.get('/get-jampel', Auth.isLoggedIn, Auth.isAdmin, (req,res) => {
+    // var time = req.params.time
+    var Jampel = models.Jampel
+    Jampel.findAll()
+    .then(jampels => {
+        res.json({
+            status: 'sukses',
+            msg: 'Jam PElajaran',
+            data: jampels
+        })
+    })
+})
 module.exports = router

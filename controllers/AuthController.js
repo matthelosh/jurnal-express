@@ -14,14 +14,18 @@ exports.dashboard = (req,res) => {
 		res.redirect('/login')
 	} else {
 		var userid = req.user.userid
-		res.redirect('/dashboard/profile/'+userid)
+		// res.redirect('/dashboard/profile/'+userid)
+		res.redirect('/dashboard/beranda')
 	}
 }
 exports.dashWithProfile = (req, res) => {
 	var cookies = req.cookies
 	if(req.params.userid != req.user.userid && req.user.level !='1') {
-		res.redirect('/dashboard/profile/'+req.user.userid)
+		// res.redirect('/dashboard/profile/'+req.user.userid)
+		res.redirect('/dashboard/beranda')
 	}
+	if (req.user.level == '3') res.redirect('/dashboard/staf/jurnal')
+
 	
 		var me = req.user
 		var siteTitle = process.env.APP_NAME

@@ -5,17 +5,22 @@ var Absen = models.Absen
 var Sequelize = require('sequelize')
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
+const pejabats = require(__dirname + '/../config/settings').chatIdLapor
 sequelize = new Sequelize(config.database, config.username, config.password, config);
+
 
 const BotTelegram = require('node-telegram-bot-api')
 const token = process.env.TOKEN_BOT1
 const bot = new BotTelegram(token, {polling: false})
+let moment = require('moment-timezone')
+moment.locale('id')
 
 var d = new Date()
 var tgl = (d.getDate() <= 9)? '0'+d.getDate():d.getDate()
 var bln = ((d.getMonth()+1) <= 9)? '0'+(d.getMonth()+1):d.getMonth()+1
 var th = d.getFullYear()
-var tanggalHariIni = th+'-'+bln+'-'+tgl
+var tanggalHariIni = moment(th+'-'+bln+'-'+tgl).tz('Asia/Jakarta').format()
+// var tanggalHariIni = moment()
 
 String.prototype.count=function(s1) { 
     return Number((this.length - this.replace(new RegExp(s1,"g"), '').length) / s1.length);
@@ -207,56 +212,90 @@ exports.doAbsen = (req, res) => {
 	var jmlA = 0
 	var jmlT = 0
 	async function absen() {
-		var LogAbsen = models.LogAbsen
-		await nises.forEach(item => {
-			var ket = req.body['absen-'+item]
-			if (ket == 'h') {
-				jmlH +=1
-			} else if (ket == 'i'){
-				jmlI +=1
-			}else if (ket == 's'){
-				jmlS +=1
-			}else if (ket == 'a'){
-				jmlA +=1
-			}else if (ket == 't'){
-				jmlT +=1
-			}
+		try {
+			var LogAbsen = models.LogAbsen
+			await nises.forEach(item => {
+				var ket = req.body['absen-'+item]
+				if (ket == 'h') {
+					jmlH +=1
+				} else if (ket == 'i'){
+					jmlI +=1
+				}else if (ket == 's'){
+					jmlS +=1
+				}else if (ket == 'a'){
+					jmlA +=1
+				}else if (ket == 't'){
+					jmlT +=1
+				}
 
-			absens.push({
-				kodeAbsen: kodeAbsen,
-				tanggal: tanggal,
-				jamke: jamke,
-				siswaId: item,
-				guruId: guruId,
-				mapelId: mapelId,
-				rombelId: rombelId,
-				ket: ket,
-				jurnal: jurnal,
-				isValid: '0'
+				absens.push({
+					kodeAbsen: kodeAbsen,
+					tanggal: tanggal,
+					jamke: jamke,
+					siswaId: item,
+					guruId: guruId,
+					mapelId: mapelId,
+					rombelId: rombelId,
+					ket: ket,
+					jurnal: jurnal,
+					isValid: '0'
+				})
 			})
-		})
 
-		var absen = await Absen.bulkCreate(absens,{ignoreDuplicates:true})
-		var updateLog = await LogAbsen.update({
-											jmlSiswa : (jmlH+jmlI+jmlS+jmlA+jmlT),
-											h: jmlH,
-											i: jmlI,
-											s: jmlS,
-											a: jmlA,
-											t: jmlT,
-											jurnal: jurnal,
-											status: 'pelajaran'
-										},{where: {kodeAbsen:kodeAbsen}})
-		
-		console.log(updateLog)
-		// var 
+			var absen = await Absen.bulkCreate(absens,{ignoreDuplicates:true})
+			var updateLog = await LogAbsen.update({
+												jmlSiswa : (jmlH+jmlI+jmlS+jmlA+jmlT),
+												h: jmlH,
+												i: jmlI,
+												s: jmlS,
+												a: jmlA,
+												t: jmlT,
+												jurnal: jurnal,
+												status: 'pelajaran'
+											},{where: {kodeAbsen:kodeAbsen}})
+			
+			
+			var text =`
+					Hari, tanggal: ${moment(new Date()).format('LLLL')},
+					Bpk / Ibu: ${req.user.fullname}
+					telah mengabsen Kelas: ${rombelId}
+					Jam Ke: ${jamke},
+					Jml Siswa: ${(jmlH + jmlI + jmlS + jmlA + jmlT)},
+					Hadir: ${jmlH},
+					Izin: ${jmlI},
+					Sakit: ${jmlS},
+					Alpa: ${jmlA},
+					Telat: ${jmlT},
+					Jurnal: ${jurnal}
+			`
+			
+			var report = await pejabats.forEach((item,index) => {
+				bot.sendMessage(item.chatId, text).catch(err => {
+					console.log(err.body, item.chatId)
+				})
+			})
+			// console.log(updateLog)
+			// var 
+			res.json({
+				status: 'sukses',
+				msg: 'Proses absen berhasil',
+				data: [absen, updateLog, report]
+			})
+		} catch(err) {
+			res.json({
+				status: 'gagal',
+				msg: 'Proses absen Gagal',
+				data: err
+			})
+		}
 
 
 		
 
 	}
 
-	absen()
+	
+	absen().catch(err => {console.log(err)})
 	// res.json(absens)
 	// console.log(req.body.kodeAbsen)
 }

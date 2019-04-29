@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     hp: DataTypes.STRING,
     chatId: DataTypes.STRING,
     level: DataTypes.STRING,
+    foto: DataTypes.STRING,
+    sosmed: DataTypes.STRING,
+    latar: DataTypes.STRING,
     isActive: DataTypes.ENUM('1','0')
   }, {
     indexes:[

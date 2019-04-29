@@ -3,6 +3,12 @@ var bCrypt = require('bcrypt')
 var models = require('./../models')
 var JurnalGuru = models.JurnalGuru
 var Sequelize = require('sequelize')
+const pejabats = require(__dirname + '/../config/settings').chatIdLapor
+const BotTelegram = require('node-telegram-bot-api')
+const token = process.env.TOKEN_BOT1
+const bot = new BotTelegram(token, { polling: false })
+let moment = require('moment-timezone')
+moment.locale('id')
 
 exports.getOne = (req,res) => {
 	var id = req.params.id
@@ -37,7 +43,17 @@ exports.createOne = (req, res) => {
 				kegiatan: req.body.kegiatan,
 				uraian: req.body.uraian
 			})
-
+			var text = `
+				Hari, tanggal: ${moment(new Date()).format('LLLL')},
+				Nama: ${req.user.fullname}
+				telah  mengisi jurnal,
+				Jurnal: ${req.body.kegiatan}
+			`
+			var lapor = await pejabats.forEach((item, index) => {
+				bot.sendMessage(item.chatId, text).catch(err => {
+					console.log(err.body, item.chatId)
+				})
+			})
 			var myJurnals = getJurnals(req, res)
 
 			res.json({
@@ -58,7 +74,9 @@ exports.createOne = (req, res) => {
 		}
 	}
 
-	create()
+	create().catch(err => {
+		console.log(err)
+	})
 }
 
 exports.deleteOne = (req, res) => {
@@ -86,6 +104,38 @@ exports.deleteOne = (req, res) => {
 	}
 
 	hapus()
+}
+
+exports.updateOne = (req, res) => {
+	async function perbarui() {
+		try {
+			var id = req.body.id
+			var jurnal = {
+				mulai: req.body.mulai,
+				selesai: req.body.selesai,
+				lokasi: req.body.lokasi,
+				kegiatan: req.body.kegiatan,
+				uraian: req.body.uraian
+			}
+			var update = await JurnalGuru.update(jurnal, {where: {id: id}})
+
+			var jurnals = await getJurnals(req,res)
+
+			res.json({
+				status: 'sukses',
+				msg: 'Data Jurnal',
+				data: jurnals
+			})
+		} catch (err) {
+			res.json({
+				status: 'gagal',
+				msg: 'Gagal Perbarui Jurnal: ' + err,
+				data: null
+			})
+		}
+	}
+
+	perbarui()
 }
 
 function getJurnals(req,res) {

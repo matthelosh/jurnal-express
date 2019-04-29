@@ -3,6 +3,15 @@
 // 		// Animate loader off screen
 // 		$(".se-pre-con").fadeOut("slow");;
 // 	});
+Date.prototype.getWeek = function () {
+	return [new Date(this.setDate(this.getDate() - this.getDay()))]
+		.concat(
+			String(Array(6)).split(',')
+				.map(function () {
+					return new Date(this.setDate(this.getDate() + 1));
+				}, this)
+		);
+}
 
 $(document).ready(function(){
 	var dataSet;
@@ -1456,6 +1465,91 @@ var bulans = [
 		// $(this).not('selector')
 	})
 // End Sidebar
+
+// ChartJS
+	var url = window.location.href
+	// alert(url)
+	if (url == window.location.origin + '/dashboard/admin/beranda') {
+		// alert(url)
+		var date = new Date('2019-04-14')
+		var week = date.getWeek()
+		var chartlabels = []
+		week.forEach((item, index) => {
+			chartlabels.push(item.getDate()+'/'+('0'+(item.getMonth()+1)))
+		})
+		var ctx = document.getElementById('adminChart1').getContext('2d')
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				// labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+				labels: chartlabels,
+				datasets: [{
+					label: '# Absen perhari',
+					data: [12, 19, 3, 5, 2, 3],
+					backgroundColor: [
+						'rgba(255, 99, 132, 0.2)',
+						'rgba(54, 162, 235, 0.2)',
+						'rgba(255, 206, 86, 0.2)',
+						'rgba(75, 192, 192, 0.2)',
+						'rgba(153, 102, 255, 0.2)',
+						'rgba(255, 159, 64, 0.2)'
+					],
+					borderColor: [
+						'rgba(255, 99, 132, 1)',
+						'rgba(54, 162, 235, 1)',
+						'rgba(255, 206, 86, 1)',
+						'rgba(75, 192, 192, 1)',
+						'rgba(153, 102, 255, 1)',
+						'rgba(255, 159, 64, 1)'
+					],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			}
+		})
+
+	}
+// End ChartJS
+// Bell
+
+	
+
+	function getJampel(){
+		// var date = new Date()
+		// var time = date.getHours()+':'+date.getMinutes()
+		var jampels = []
+		$.ajax({
+			type: 'get',
+			url: '/xhr/get-jampel',
+			dataType: 'json',
+			success: function(res) {
+				// console.log(res)
+				res.data.forEach(item => {
+					jampels.push(item)
+				})
+			}
+		})
+		return jampels
+	}
+	let jampels = getJampel()
+	console.log(jampels)
+	var now = new Date()
+	var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 06, 28, 0, 0) - now
+	var jam1 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), jampels[0].awal.substr(0,2), jampels[0].awal.substr(-2), 0, 0) - now
+	if (millisTill10 < 0) {
+		millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
+	}
+	setTimeout(function () { alert("It's Jam pertama!") }, jam1)
+	// zKkkzkzzkzhh
+// End Bell
 
 	var dataTable = $('.dataTable').DataTable({
 		dom:'Bfrtip',

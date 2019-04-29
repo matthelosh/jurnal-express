@@ -29,7 +29,6 @@
 									th Selesai
 									th Lokasi
 									th Kegiatan
-									th Uraian
 									th Opsi
 							tbody
 								unless data == null
@@ -41,13 +40,27 @@
 											td #{jurnal.selesai}
 											td #{jurnal.lokasi}
 											td #{jurnal.kegiatan}
-											td(style="word-wrap: break-word!important") #{(jurnal.uraian) ? jurnal.uraian.substr(0,60) : 'kosong'} [...]
+											//- td(style="word-wrap: break-word!important") !{(jurnal.uraian) ? jurnal.uraian.substr(0,60) : 'kosong'} [...]
 											td 
+												button.btn.btn-info.btn-sm.btnDetilJurnal(data-id=`${jurnal.id}` data-nama=`${jurnal.kegiatan}`)
+													i.fa.fa-search
+												| &nbsp;
 												button.btn.btn-warning.btn-sm.btnEditJurnal(data-id=`${jurnal.id}` data-nama=`${jurnal.kegiatan}`)
 													i.fa.fa-pencil
 												| &nbsp;
 												button.btn.btn-danger.btn-sm.btnHapusJurnal(data-id=`${jurnal.id}` data-nama=`${jurnal.kegiatan}`)
 													i.fa.fa-trash
+
+.modal#modalDetilJurnal
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(data-dismiss='modal')
+					i.fa.fa-close
+				h4 Detil Jurnal
+			.modal-body
+			.modal-footer
+				
 
 .modal#modalFormJurnal(role="dialog")
 	.modal-dialog.modal-md

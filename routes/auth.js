@@ -1,4 +1,6 @@
 let authController = require('./../controllers/AuthController')
+var secret = require('./../config/settings').jwtSecret
+var jwt = require('jsonwebtoken')
 module.exports = (app, passport) => {
 	app.get('/signup', authController.signup)
 	app.get('/login', authController.login)
@@ -28,8 +30,52 @@ module.exports = (app, passport) => {
 	}),(req, res) => {
 		// req.flash()
 		// console.log(req.flash)
-		res.redirect('/dashboard/profile/'+req.body.userid)
+			var level = (req.user.level == '1') ? 'admin' : (req.user.level == '2') ? 'guru' : 'staf'
+		res.redirect('/dashboard/'+level+'/beranda')
 	})
+
+	app.post('/api-login', function(req, res, next) {
+		passport.authenticate('api-login', { session: false }, (err, user, info) => {
+			if (err || !user) {
+				return res.status(400).json({
+					message: err,
+					user: user
+				});
+			}
+			req.login(user, { session: false }, (err) => {
+				if (err) {
+					res.send(err);
+				}
+				// generate a signed son web token with the contents of user object and return it in the response
+				const token = jwt.sign(user, secret);
+				return res.json({ user, token });
+			});
+		})(req, res);
+	})
+	// app.post('/api-login', passport.authenticate('local-login', {
+	// 		failureFlash:true
+	// 	},(err,user, info) => {
+			
+	// 		if (err) {console.log(err)}
+	// 		if (info != undefined) {console.log(info.msg)}
+	// 		else {
+	// 			req.logIn((user, err) => {
+	// 				user.findOne({
+	// 					where: {userid: user.userid}
+	// 				}).then(user => {
+	// 					const token = jwt.sign({id: user.userid}, secret)
+	// 					res.json({
+	// 						status: 'sukses',
+	// 						token: token,
+	// 						msg: 'Berhasil Log In',
+	// 						auth: true
+	// 					})
+	// 				})
+	// 			})
+	// 		}
+	// 	})
+	// 	// res.send('Halo')
+	// })
 
 	app.get('/404', (req,res) => {
 		res.render('404', {'pageTitle': '404', 'msg': 'Maaf! Halaman tidak ditemukan.'})

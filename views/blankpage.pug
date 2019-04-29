@@ -1,22 +1,23 @@
 extends layout/base 
 block content 
-	section.content-header 
-		h1 
-			//- <i class="fa fa-#{p}"></i>
-			span(style="text-transform:capitalize") #{p}
-			small !{subtitle}
-		ol.breadcrumb 
-			li 
-				a(href='#') 
-					i.fa.fa-dashboard
-					| Level 
-			li.active Here 
+	//- section.content-header 
+	//- 	h1 
+	//- 		//- <i class="fa fa-#{p}"></i>
+	//- 		span(style="text-transform:capitalize") #{p}
+	//- 		small !{subtitle}
+	//- 	ol.breadcrumb 
+	//- 		li 
+	//- 			a(href='#') 
+	//- 				i.fa.fa-dashboard
+	//- 				| Level 
+	//- 		li.active Here 
 	section.content
-		
+		//- h3 #{p}
 		if (user.level =='1')
 			unless p
-				//- p #{JSON.stringify(user)}
-				
+				p #{data}
+			if (p == 'beranda')
+				include adminInc/beranda
 			if (p == 'users')
 				include adminInc/user
 			if (p == 'siswas')
@@ -59,3 +60,13 @@ block content
 				include guruInc/rekapku
 			if (p == 'jurnalku')
 				include guruInc/jurnalku
+			if (p == 'profil')
+				include guruInc/profil
+		else if (user.level == '3')
+			if (p == 'beranda')
+				include guruInc/beranda
+			if (p == 'profil')
+				include guruInc/profil
+			if (p == 'jurnal')
+				include guruInc/jurnalku
+				

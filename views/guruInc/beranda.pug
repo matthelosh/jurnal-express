@@ -1,60 +1,71 @@
-.row
-	.container-fluid
-		.col-xs-12
-			h2.text-center Anda memiliki #{data.length} Pertemuan hari ini
-			hr
+.container-fluid
+	if (user.level == '3')
+		.box
+			.box-header
+			.box-body
+				canvas#stafChart
+	if (user.level == '2')
+		.row
+			.container-fluid
+				.col-xs-12
+					h2.text-center Anda memiliki #{data.length} Pertemuan hari ini
+					hr
+					
+		.row#dataJadwal
 			
-.row#dataJadwal
-	.container-fluid
-		each jadwalku, index in data
-			.col-sm-4
-				.box.dark(class=`${(jadwalku.isActive != 'buka')? 'bg-red': (jadwalku.jmlSiswa > 0) ? 'bg-green': 'bg-blue'}`)
-					.box-header.text-center.with-border
-						i.pull-right(class=`${(jadwalku.isActive != 'buka')? 'fa fa-close text-white': (jadwalku.jmlSiswa > 0) ? 'fa fa-thumbs-up text-yellow': 'fa fa-pencil text-orange'}`)
-						h4(style="color:white") 
-							i.fa.fa-university
-							| &nbsp; #{jadwalku.Rombel.namaRombel}
-					.box-body
-						h5 #{jadwalku.Mapel.namaMapel}
-						p Jamke #{jadwalku.jamke}
-						p.text-justify Mulai: #{jadwalku.mulai} | Selesai: #{jadwalku.selesai}
-					.box-footer
-						if (jadwalku.isActive != 'buka')
-							h4.text-center.text-red Maaf! Jadwal ini sudah tutup. 
-						else if (jadwalku.jmlSiswa > 0)
-							h4.text-center.text-red Sudah diabsen.
-								button.btn.btn-sm.btn-info
-									i.fa.fa-search
-									| &nbsp; Lihat
-						else 
-							button.btn.btn-primary.flat.center-block.btnDoAbsen(style="display: block" data-id=`${jadwalku.kodeAbsen}` data-rombel=`${jadwalku.rombelId}`)
-								i.fa.fa-pencil
-								| &nbsp; Lakukan Absensi
+			each jadwalku, index in data
+				.col-sm-4
+					.box.dark(class=`${(jadwalku.isActive != 'buka')? 'bg-red': (jadwalku.jmlSiswa > 0) ? 'bg-green': 'bg-blue'}`)
+						.box-header.text-center.with-border
+							i.pull-right(class=`${(jadwalku.isActive != 'buka')? 'fa fa-close text-white': (jadwalku.jmlSiswa > 0) ? 'fa fa-thumbs-up text-yellow': 'fa fa-pencil text-orange'}`)
+							h4(style="color:white") 
+								i.fa.fa-university
+								| &nbsp; #{jadwalku.Rombel.namaRombel}
+						.box-body
+							h5 #{jadwalku.Mapel.namaMapel}
+							p Jamke #{jadwalku.jamke}
+							p.text-justify Mulai: #{jadwalku.mulai} | Selesai: #{jadwalku.selesai}
+						.box-footer
+							if (jadwalku.isActive != 'buka')
+								h4.text-center.text-red Maaf! Jadwal ini sudah tutup. 
+							else if (jadwalku.jmlSiswa > 0)
+								h4.text-center.text-red Sudah diabsen.
+									a.btn.btn-sm.btn-info(href='/dashboard/guru/absenku')
+										i.fa.fa-search
+										| &nbsp; Lihat
+							else 
+								button.btn.btn-primary.flat.center-block.btnDoAbsen(style="display: block" data-id=`${jadwalku.kodeAbsen}` data-rombel=`${jadwalku.rombelId}`)
+									i.fa.fa-pencil
+									| &nbsp; Lakukan Absensi
 
-.row#doAbsenBox(style="display:none")
-	.container-fluid
-		.col-xs-12
-			.box
-				.box-header
-					h4 Kode Absen: 
-						span#idAbsen
-				.box-body
-					.table-responsive
-						form.form#formDoAbsen
-							input#kodeAbsen(type="hidden" name="kodeAbsen")
-							table.table.table-bordered.table-condensed#tableDoAbsen
-								thead
-									tr
-										th No
-										th NIS
-										th Nama
-										th H
-										th I
-										th S
-										th A
-										th T
-								tbody#tbodyDoAbsen
-							textarea.form-control#jurnalAjar(placeholder="Jurnal Ajar" name="jurnalAjar")
-							button.btn.btn-primary#btnDoAbsen(type="submit") Proses
+		.row#doAbsenBox(style="display:none")
+			.col-xs-12
+				.box
+					.box-header
+						h4 Kode Absen: 
+							span#idAbsen
+						.box-tools.pull-right
+							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+								i.fa.fa-minus
+							button(type='button', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+								i.fa.fa-times
+					.box-body
+						.table-responsive
+							form.form#formDoAbsen
+								input#kodeAbsen(type="hidden" name="kodeAbsen")
+								table.table.table-bordered.table-condensed#tableDoAbsen
+									thead
+										tr
+											th No
+											th NIS
+											th Nama
+											th H
+											th I
+											th S
+											th A
+											th T
+									tbody#tbodyDoAbsen
+								textarea.form-control#jurnalAjar(placeholder="Jurnal Ajar" name="jurnalAjar")
+								button.btn.btn-primary#btnDoAbsen(type="submit") Proses
 
 

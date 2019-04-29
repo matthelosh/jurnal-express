@@ -1,9 +1,129 @@
 var exports = module.exports = {}
 var bCrypt = require('bcrypt')
 var models = require('./../models')
+var fs = require('fs')
 var User = models.User
 var Sequelize = require('sequelize')
+var multer = require('multer')
+// var path = require('path')
 
+let storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, './public/img/profiles/')
+	},
+	filename: (req, file, cb) => {
+		cb(null, req.user+'.jpg' )
+	}
+})
+var upload = multer({storage})
+
+// var upload = multer({storage:storage})
+// exports.postFotoUser = (req, res) => {
+// 	// console.log(req.file)
+// 	var tmp_path = req.file.path;
+
+// 	/** The original name of the uploaded file
+// 		stored in the variable "originalname". **/
+// 	var target_path = 'uploads/' + req.file.originalname;
+
+// 	/** A better way to copy the uploaded file. **/
+// 	var src = fs.createReadStream(tmp_path);
+// 	var dest = fs.createWriteStream(target_path);
+// 	src.pipe(dest);
+// 	src.on('end', function () { res.render('complete'); });
+// 	src.on('error', function (err) { res.render('error'); });
+	
+	
+	
+// }
+exports.updatePart = (req, res) => {
+	var id = req.body.id,
+		field = req.body.field,
+		value = (field == 'password')? generateHash(req.body.value) : req.body.value
+
+		update(field, value, id)
+
+	async function update(field, value, id){
+		var data = (field == 'fullname')? {fullname: value}:(field == 'hp')?{hp:value}:{password: value}
+		try {
+		var updStatus = await User.update(data, { where: { id: id } })
+		var me = await User.findOne({where: {id: id}, attributes:{exclude:['password']}} )
+		res.json({
+			status: 'sukses',
+			msg: value,
+			data: me
+		})
+		// console.log(me)
+		} catch(err) {
+			res.json({
+				status: 'gagal',
+				msg: 'Gagal edit ' + field,
+				data: err
+			})
+		}
+	}
+	
+		
+}
+exports.postFotoProfil = (req, res) => {
+	var tmp_path = req.file.path;
+	var fs = require('fs')
+    /** The original name of the uploaded file
+        stored in the variable "originalname". **/
+	var target_path = './public/img/profiles/' + req.user.userid + '.jpg';
+
+	// /** A better way to copy the uploaded file. **/
+	var src = fs.createReadStream(tmp_path);
+	var dest = fs.createWriteStream(target_path);
+	src.pipe(dest);
+	src.on('end', function () {
+		models.User.update({ foto: 'ada' }, { where: { userid: req.user.userid } })
+			.then(ok => {
+				res.json({
+					status: 'sukses',
+					msg: 'Profil telah diupload',
+					data: ok
+				})
+			})
+	});
+	src.on('error', function (err) {
+		res.json({
+			status: 'gagal',
+			msg: 'Gagal Upload Foto Profil',
+			data: err
+		})
+	});
+}
+exports.postFotoLatar = (req, res) => {
+	
+	var tmp_path = req.file.path;
+	var fs = require('fs')
+    /** The original name of the uploaded file
+        stored in the variable "originalname". **/
+	var target_path = './public/img/profiles/' + req.user.userid + 'L.jpg';
+
+	// /** A better way to copy the uploaded file. **/
+	var src = fs.createReadStream(tmp_path);
+	var dest = fs.createWriteStream(target_path);
+	src.pipe(dest);
+	src.on('end', function () {
+		models.User.update({ latar: 'ada' }, { where: { userid: req.user.userid } })
+			.then(ok => {
+				res.json({
+					status: 'sukses',
+					msg: 'Latar telah diupload',
+					data: ok
+				})
+			})
+	});
+	src.on('error', function (err) {
+		res.json({
+			status: 'gagal',
+			msg: 'Gagal Upload Foto Latar',
+			data: err
+		})
+	});
+}
 exports.getAll4Select = (req,res) => {
 	let datas = []
 	if (!req.query.q || req.query.q == null) {

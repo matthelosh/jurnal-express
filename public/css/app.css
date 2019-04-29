@@ -166,3 +166,100 @@ div.DTFC_LeftBodyWrapper > div > table tr:nth-child(even) td {
 	/*font-weight: 200;*/
 	font-family: 'Open Sans', sans-serif;
 }
+
+/* Halaman Profil */
+.profilePage{
+	width: 100%;
+	height: 100vh;
+	position: relative;
+	background: pink;
+}
+.profilePage #latar{
+	width: 100%;
+	height: 300px;
+	position: relative;
+	/* background: #ccc url('/img/profiles/profile-latar.jpg'); */
+	background-size: 100%;
+	background-position: center;
+	background-attachment: fixed;
+	color: #333531;
+	box-sizing: border-box;
+	padding: 20px;
+	/* box-shadow: 0 5px 10px rgba(0,0,0,0.5); */
+	z-index: 9;
+}
+
+
+
+#isi {
+	display:flex;
+}
+
+.profilePage #isi .kolomFoto{
+	min-height: 500px;
+	width: 25%;
+	background: #dedede;
+	box-sizing: border-box;
+	padding-top: 60px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+.profilePage #isi .kolomFoto .fotoBox {
+	content: 'Foto Profil';
+	height: 200px;
+	width: 200px;
+	border-radius: 50%;
+	position: absolute;
+	top: 180px;
+	left: 150px;
+	z-index: 10;
+	box-shadow: 0 0 10px rgba(0,0,0,0.6);
+	border: 2px solid white;
+}
+.profilePage #latar:hover button {
+	opacity: 1;
+	position: absolute;
+	z-index:11;
+	margin: auto;
+	background: none;
+	bottom: 10px!important;
+	right: 20px!important;
+	display: block!important;
+	color: #fefefe!important;
+}
+.profilePage #isi .kolomFoto .fotoBox:hover button{
+	opacity: 1;
+	position: absolute;
+	z-index:11;
+	margin: auto;
+	background: none;
+	bottom: 20px!important;
+	right: -20px!important;
+	display: block!important;
+	color: #363434!important;
+}
+.profilePage #isi .kolomProfil{
+	min-height: 400px;
+	width: 75%;
+	background: rgb(233, 233, 235);
+	box-sizing: border-box;
+	padding-top: 60px;
+	padding-left: 100px;
+	position: relative;
+}
+
+/* .profilePage #isi .kolomProfil p:hover{
+	background: pink;
+} */
+
+/* .profilePage #isi .kolomProfil p .userHP:hover #editUserHP{
+	opacity: 1;
+	position: absolute;
+	z-index:11;
+	margin: auto;
+	background: none;
+	/* bottom: 20px!important; */
+	/* right: -20px!important; */
+	/* display: block!important;
+	color: #363434!important;
+} */ 
