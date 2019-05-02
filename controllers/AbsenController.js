@@ -25,6 +25,81 @@ var tanggalHariIni = moment(th+'-'+bln+'-'+tgl).tz('Asia/Jakarta').format()
 String.prototype.count=function(s1) { 
     return Number((this.length - this.replace(new RegExp(s1,"g"), '').length) / s1.length);
 }
+// 238177 - 
+exports.getRekapHari = (req, res) => {
+	var kelas = req.query.kelas
+	var tanggal = moment(d).format('YYYY-MM-DD')
+	// res.send(tanggal)
+	getAbsenHari()
+	async function getAbsenHari() {
+		try {
+			var absens = await Absen.findAll({
+				where: {
+					tanggal: tanggal,
+					rombelId: kelas
+				},
+				include: [models.Siswa]
+			})
+			var jamke = []
+			await absens.forEach(item => {
+				jamke.push(item.jamke)
+			})
+			// console.log(absens)
+			var cols = await jamke.filter((elem, index, self) => {
+				return index == self.indexOf(elem)
+			})
+			cols.unshift('No', 'NIS', 'Nama')
+
+			var siswas = await absens.reduce(function (r, a, i) {
+				r[a.siswaId] = r[a.siswaId] || []
+				r[a.siswaId].push(a)
+				// r.push(a)
+				return r
+				// }, [])
+			}, {})
+
+			let items = []
+			await Object.keys(siswas).forEach(function (key, index) {
+				// absens.push(datas[key])
+				items.push({ nis: siswas[key][0].siswaId, nama: siswas[key][0].Siswa.namaSiswa, ket: getKet(siswas[key]) })
+			})
+
+			function getKet(datas) {
+				var isi = []
+				datas.forEach((item, index) => {
+					isi.push(item.ket)
+
+					// if (!isi[item.jamke]) isi[item.jamke] = ''
+					// isi[item.jamke] += item.ket
+				})
+				return isi
+			}
+			if (absens.length < 1 ) {
+				res.json({
+					status: 'sukses',
+					msg: null,
+					data: absens
+				})
+			} else {
+				res.json({
+					status: 'sukses',
+					msg: 'Data Absen kelas: ' + kelas + ', tanggal: ' + tanggal,
+					data: [cols, items, siswas, absens]
+				})
+			}
+			
+		} catch(err){
+			res.json({
+				status: 'gagal',
+				msg: err,
+				data: null
+			})
+		}
+		
+
+
+	}
+}
 
 exports.ubahAbsen = (req, res) => {
 	var nis = req.body.nis
@@ -139,31 +214,6 @@ exports.getRekapWali = (req, res) => {
 						
 						if(!results[item]) results.push({tanggal: item, status : status} ) 
 					}
-					// results.forEach((item, index) => {
-					// 	if(item.status == 'H') {
-					// 		jmlH =+1
-					// 	}
-					// 	if(item.status == 'I') {
-					// 		jmlI =+1
-					// 	}
-					// 	if(item.status == 'S') {
-					// 		jmlS =+1
-					// 	}
-					// 	if(item.status == 'A') {
-					// 		jmlA =+1
-					// 	}
-					// 	if(item.status == 'T') {
-					// 		jmlT =+1
-					// 	}
-						
-					// 	// var h = sum.count('H'), i = sum.count('I'), s = sum.count('S'), a = sum.count('A'), t = sum.count('T')
-					// 	// results.push({'rekap': 'H ='+h+', I ='+i+ ', S ='+s+', A='+a+', T='+t })
-					// })
-
-					// if (!results['rekap']) results['rekap'] = 'jmlH ='+jmlH+', jmlI='+jmlI+', jmlS='+jmlS+', jmlA='+jmlA+', jmlT='+jmlT
-
-					// console.log(results)
-
 					
 					return results 
 				}

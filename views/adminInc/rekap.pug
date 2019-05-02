@@ -8,9 +8,9 @@
 							i.fa.fa-list-alt &nbsp;
 							span.hidden-xs Rekap Harian
 						.box-tools.pull-right
-							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							//- button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
 								i.fa.fa-minus
-							button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							//- button(type='button',  data-toggle='tooltip',title='Remove').btn.btn-box-tool.btn-hide
 								i.fa.fa-times
 					.box-body
 						form.form.formRekapHari
@@ -28,9 +28,9 @@
 							i.fa.fa-list-alt &nbsp;
 							span.hidden-xs Rekap Bulanan
 						.box-tools.pull-right
-							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							//- button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
 								i.fa.fa-minus
-							button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							//- button(type='button',  data-toggle='tooltip',title='Remove').btn.btn-box-tool.btn-hide
 								i.fa.fa-times
 					.box-body
 						form.form.formRekapBulan
@@ -54,9 +54,9 @@
 							i.fa.fa-list-alt &nbsp;
 							span.hidden-xs Rekap Guru
 						.box-tools.pull-right
-							button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
+							//- button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
 								i.fa.fa-minus
-							button(type='button', data-widget='remove', data-toggle='tooltip',title='Remove').btn.btn-box-tool
+							//- button(type='button',  data-toggle='tooltip',title='Remove').btn.btn-box-tool.btn-hide
 								i.fa.fa-times
 					.box-body
 						form.form.formRekapBulan
@@ -76,12 +76,13 @@
 								button.btn.btn-primary.flat.btnLihat(style="width:100%" data-lihat="rekapGuru")
 									i.fa.fa-search
 									| &nbsp; Lihat
-	.row
-		.box#boxDetail(style="display:none")
+	.row(style="display:none")
+		.box#boxDetail
 			.box-header
 				h3.box-title
 					i.fa-fa-info
-					span.hidden-xs Detail
+					span.hidden-xs
+
 				.box-tools.pull-right
 					button(type='button', data-widget='collapse', data-toggle='tooltip',title='collapse').btn.btn-box-tool
 						i.fa.fa-minus

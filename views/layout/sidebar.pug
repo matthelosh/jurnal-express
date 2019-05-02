@@ -25,7 +25,7 @@ aside.main-sidebar
 							| Beranda
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'users') ? 'active': null}`)
 					a(href="/dashboard/admin/users")
 						i.fa.fa-users
@@ -33,7 +33,7 @@ aside.main-sidebar
 							| Manajemen Pengguna
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| hot
+								
 				li(class=`${(p == 'siswas') ? 'active': null}`)
 					a(href="/dashboard/admin/siswas")
 						i.fa.fa-child
@@ -41,7 +41,7 @@ aside.main-sidebar
 							| Manajemen Siswa
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'mapel') ? 'active': null}`)
 					a(href="/dashboard/admin/mapel")
 						i.fa.fa-book
@@ -49,7 +49,7 @@ aside.main-sidebar
 							| Manajemen Mapel
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'rombel') ? 'active': null}`)
 					a(href="/dashboard/admin/rombel")
 						i.fa.fa-university
@@ -57,7 +57,7 @@ aside.main-sidebar
 							| Manajemen Rombel
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'jadwal') ? 'active': null}`)
 					a(href="/dashboard/admin/jadwal")
 						i.fa.fa-calendar-o
@@ -65,7 +65,7 @@ aside.main-sidebar
 							| Manajemen Jadwal
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'rekap') ? 'active': null}`)
 					a(href="/dashboard/admin/rekap")
 						i.fa.fa-line-chart
@@ -73,7 +73,7 @@ aside.main-sidebar
 							| Rekap Absensi
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'monitor') ? 'active': null}`)
 					a(href="/dashboard/admin/monitor")
 						i.fa.fa-desktop
@@ -81,7 +81,7 @@ aside.main-sidebar
 							| Monitor Pembelajaran
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'settings') ? 'active': null}`)
 					a(href="/dashboard/admin/settings")
 						i.fa.fa-gears
@@ -89,7 +89,7 @@ aside.main-sidebar
 							| Pengaturan
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 			
 			if (user.level == '2')
 				li
@@ -99,7 +99,7 @@ aside.main-sidebar
 							| Beranda
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'jadwal') ? 'active': null}`)
 					a(href="/dashboard/guru/jadwal")
 						i.fa.fa-calendar
@@ -107,7 +107,7 @@ aside.main-sidebar
 							| Jadwal
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'absenku') ? 'active': null}`)
 					a(href="/dashboard/guru/absenku")
 						i.fa.fa-table
@@ -115,7 +115,7 @@ aside.main-sidebar
 							| Catatan Absen
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'jurnalku') ? 'active': null}`)
 					a(href="/dashboard/guru/jurnalku")
 						i.fa.fa-book
@@ -123,7 +123,7 @@ aside.main-sidebar
 							| Jurnal Pribadi
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| Hot
+								
 				li(class=`${(p == 'profil') ? 'active': null}`)
 					a(href="/dashboard/staf/profil")
 						i.fa.fa-id-card
@@ -131,7 +131,7 @@ aside.main-sidebar
 							| Profil 
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| hot
+								
 			if user.level == '2' && user.wali =='benar' 
 				li.header MENU WALI KELAS
 				li(class=`${(p == 'rekap-absen') ? 'active': null}`)
@@ -141,7 +141,7 @@ aside.main-sidebar
 							| Rekap Absen 
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| hot
+								
 			
 			//- Menu Staf
 			if user.level == '3'
@@ -152,7 +152,7 @@ aside.main-sidebar
 							| Beranda 
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| hot
+								
 				li(class=`${(p == 'jurnal') ? 'active': null}`)
 					a(href="/dashboard/staf/jurnal")
 						i.fa.fa-book
@@ -160,7 +160,7 @@ aside.main-sidebar
 							| Jurnal 
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| hot
+								
 				li(class=`${(p == 'profil') ? 'active': null}`)
 					a(href="/dashboard/staf/profil")
 						i.fa.fa-id-card
@@ -168,4 +168,4 @@ aside.main-sidebar
 							| Profil 
 						span.pull-right-container
 							small.label.pull-right.bg-maroon
-								| hot
+								

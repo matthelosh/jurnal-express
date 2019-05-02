@@ -32,7 +32,7 @@ router.get('/getSelectUsers', Auth.isLoggedIn, UserController.getAll4Select)
 router.post('/create-user', Auth.isLoggedIn, UserController.createOne)
 router.post('/import-users', Auth.isLoggedIn, UserController.importMany)
 router.delete('/deleteOne', Auth.isLoggedIn, UserController.deleteOne)
-router.get('/getOne/:id', Auth.isLoggedIn,Auth.isAuth, UserController.getOne)
+router.get('/getOne/:id', Auth.isLoggedIn, UserController.getOne)
 router.put('/update-user', Auth.isLoggedIn, UserController.updateOne)
 router.put('/edit-part-user', Auth.isLoggedIn, UserController.updatePart)
 router.post('/foto-latar', Auth.isLoggedIn, upload.single('fotoLatar'), UserController.postFotoLatar)
@@ -89,6 +89,7 @@ router.put('/ubah-absen', Auth.isLoggedIn, AbsenController.ubahAbsen)
 
 // Wali Kelas
 router.get('/rekap-wali', Auth.isLoggedIn, AbsenController.getRekapWali)
+router.get('/rekap-hari', Auth.isLoggedIn, AbsenController.getRekapHari)
 
 // Jurnal guru
 router.post('/tulis-jurnal-guru', Auth.isLoggedIn, JurnalGuruController.createOne)

@@ -1,3 +1,5 @@
+// import moment = require("moment");
+
 /* no_doc_ready */
 // $(window).on('load', function() {
 // 		// Animate loader off screen
@@ -15,6 +17,8 @@ Date.prototype.getWeek = function () {
 
 $(document).ready(function(){
 	var dataSet;
+var today = new Date()
+moment.locale('id')
 // $('#modalLoader').modal()
 // setTimeout(function(){
 // 	$('#modalLoader').modal('hide')
@@ -1273,20 +1277,78 @@ var bulans = [
 	$('.btnLihat').on('click', function(e){
 		e.preventDefault()
 		var lihat = $(this).data('lihat')
+		var kelas = $(this).closest('form').find('#selectRombel')
+		var bulan = $(this).closest('form').find('#selectBulan')
+		var tahun = $(this).closest('form').find('#selectTahun')
+		var guru = $(this).closest('form').find('#selectWali')
 		// alert(lihat)
-		var url = (lihat == 'rekapHari')? '/xhr/rekap-hari' : (lihat == 'rekapHari')? '/xhr/rekap-bulan' : '/xhr/rekap-guru'
+		var url = (lihat == 'rekapHari')? '/xhr/rekap-hari' : (lihat == 'rekapBulan')? '/xhr/rekap-bulan' : '/xhr/rekap-guru'
+		var data = (lihat == 'rekapHari') ? { kelas: kelas.val() } : (lihat == 'rekapBulan') ? { kelas: kelas.val(), bulan: bulan.val(), tahun: tahun.val() } : { kelas: kelas.val(), bulan: bulan.val(), tahun: tahun.val(), guru: guru.val()}
+		// alert(urlvar 
+		// var data = {
+		// }
+		// console.log(data)
+
 
 		$.ajax({
 			type: 'get',
 			url: url,
+			data: data,
+			beforeSend: function(){
+				$('#modalLoader').modal()
+			},
+			complete: function(){
+				$('#modalLoader').modal('hide')
+			},
+			success: function(res){
+				if (res.status == 'gagal') {alert(res.msg)}
+				if (res.msg == null) {alert('Data Absen Kosong'); return false}
+				console.log(res.data)
+				var tgl = moment(today).format('LLLL')
+				var header = `
+					<h3>Rekap Absen Hari ini tanggal ${tgl}</h3>
+				`
+				$('#boxDetail .box-header h3 span').html(header)
+				$('#boxDetail .box-body').html('')
+				writeDetailAbsen(res.data[1], res.data[0], kelas.val())
+				$('#boxDetail .box-body table').DataTable().draw()
+				$('.box-content').slideUp()
+				$('#boxDetail').parents('.row').slideDown()
+			}
 
 		})
-		$('.box-content').slideUp()
-		$('#boxDetail').slideDown()
+		
 	})
 
+	async function writeDetailAbsen(datas, cols, kelas) {
+		var ths = ''
+		await cols.forEach(item => {
+			ths += '<th style="text-align:center">'+item+'</th>'
+		})
+		var tbody = ''
+		await datas.forEach((item, index)=>{
+			tbody += '<tr><td >' + (index + 1) + '</td><td >' + item.nis +'</td><td >'+item.nama+'</td>'
+			item.ket.forEach(ket => {
+				tbody += '<td>'+ket+'</td>'
+			})
+		})
+		$('#boxDetail .box-body').html(`
+			<div class="table-responsive">
+				<table border="1" style="border-collapse:collapse;" width="100%" class="table dataTable" data-title="Rekap Harian">
+					<caption>Kelas: ${kelas}</caption>
+					<thead>
+						<tr>${ths}</th>
+					</thead>
+					<tbody>
+						${tbody}
+					</tbody>
+				</table>
+			</div>
+		`)
+	}
+
 	$('.btnHideMe').on('click', function(){
-		$(this).parents('#boxDetail').slideUp()
+		$('#boxDetail').parents('.rows').slideUp()
 		$('.box-content').slideDown()
 	})
 	
@@ -1520,60 +1582,31 @@ var bulans = [
 // End ChartJS
 // Bell
 
-	
-
-	function getJampel(){
-		// var date = new Date()
-		// var time = date.getHours()+':'+date.getMinutes()
-		var jampels = []
-		$.ajax({
-			type: 'get',
-			url: '/xhr/get-jampel',
-			dataType: 'json',
-			success: function(res) {
-				// console.log(res)
-				res.data.forEach(item => {
-					jampels.push(item)
-				})
-			}
-		})
-		return jampels
-	}
-	let jampels = getJampel()
-	console.log(jampels)
-	var now = new Date()
-	var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 06, 28, 0, 0) - now
-	var jam1 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), jampels[0].awal.substr(0,2), jampels[0].awal.substr(-2), 0, 0) - now
-	if (millisTill10 < 0) {
-		millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
-	}
-	setTimeout(function () { alert("It's Jam pertama!") }, jam1)
-	// zKkkzkzzkzhh
 // End Bell
 
-	var dataTable = $('.dataTable').DataTable({
+	$('.dataTable').DataTable({
 		dom:'Bfrtip',
         "lengthMenu": [ 10, "All" ],
         buttons: [
             {
                 extend: 'copy',
                 title: $('.dataTable').attr('data-judul'),
-                messageTop: 'Tanggal:  '+ new Date()
+                messageTop: 'Tanggal:  '+ moment(today).format('LLLL')
             },
             {
                 extend: 'excel',
                 title: $('.dataTable').attr('data-judul'),
-                messageTop: 'Tanggal:  '+ new Date()
+				messageTop: 'Tanggal:  ' + moment(today).format('LLLL')
             },
             {
                 extend: 'print',
                 title: $(this).data('data-title'),
-                messageTop: 'Tanggal:  '+ new Date()
+				messageTop: 'Tanggal:  ' + moment(today).format('LLLL')
             },
             {
                 extend: 'pdf',
                 title: $(this).attr('data-title'),
-                messageTop: 'Tanggal:  '+ new Date()
+				messageTop: 'Tanggal:  ' + moment(today).format('LLLL')
             }
         ],
         "language": {

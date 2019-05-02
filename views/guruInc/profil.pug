@@ -1,0 +1,40 @@
+.profilePage
+    .row-fluid.fotoLatar#latar(style=`background-image: url('/img/profiles/${user.userid}L.jpg'); background-size: 100%;
+    background-position: center bottom;
+    background-attachment: fixed;`)
+        h1.page-title(style="color: white!important;")
+            i.fa.fa-id-card &nbsp;
+            | Profil
+        input#userLatarInput(type="file" name="userFoto" data-user=`${user.userid}` style="display:none")
+        button.btn.bg-white.btn-uploadLatar#uploadLatar(style="display:none;")
+            i.fa.fa-image &nbsp;
+            | Upload
+    .row-fluid#isi
+        .kolomFoto
+            .fotoBox.userFoto#userFoto(style=`background: url('/img/profiles/${(user.foto)?user.userid: 'blank'}.jpg');background-size: 100%;background-position:bottom;`)
+                input#userFotoInput(type="file" name="userFoto" data-id=`${user.id}` data-user=`${user.userid}` style="display:none")
+                button.btn.btn-upload#uploadFoto(style="display:none;")
+                    i.fa.fa-image &nbsp;
+                    | Upload
+
+            h3 <small>UserID:</small> #{user.userid}
+            p #{user.password}
+        .kolomProfil
+            h3(style="text-transform:uppercase;") 
+                span.userFullname #{user.fullname} 
+                input#inputFullname(type="text" name="fullname" data-id=`${user.id}` data-user=`${user.userid}` style="display:none" value=`${user.fullname}`)
+                br
+                small 
+                    if (user.level == '2')
+                        | Guru
+                    else
+                        | Staf TU
+            hr
+            .row
+                i.fa.fa-phone &nbsp;
+                span.userHP #{user.hp}
+                input#inputHP(type="text" name="userHP" data-id=`${user.id}` data-user=`${user.userid}` style="display:none" value=`${user.hp}`)
+            .row
+                i.fa.fa-lock  &nbsp;
+                span.userPwd.text-blue(style="cursor:pointer;") Ganti Password? 
+                input#inputPwd(type="text" name="userPwd" data-id=`${user.id}` data-user=`${user.userid}` style="display:none" value=`` placeholder="Masukkan Password Baru!")
